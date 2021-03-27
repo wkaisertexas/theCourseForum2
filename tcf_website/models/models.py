@@ -2,7 +2,7 @@
 
 """TCF Database models."""
 
-from django.db import models
+from django.db import models, transaction
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.db.models.functions import Coalesce, Abs
@@ -630,55 +630,21 @@ class Review(models.Model):
 
     def upvote(self, user):
         """Create an upvote."""
-
-        # Check if already upvoted.
-        upvoted = Vote.objects.filter(
-            user=user,
-            review=self,
-            value=1,
-        ).exists()
-
-        # Delete all prior votes.
-        Vote.objects.filter(
-            user=user,
-            review=self,
-        ).delete()
-
-        # Don't upvote again if previously upvoted.
-        if upvoted:
-            return
-
-        Vote.objects.create(
-            value=1,
-            user=user,
-            review=self,
-        )
+        # Use a transaction to avoid race conditions, not handling IntegrityError
+        with transaction.atomic():
+            if Vote.objects.filter(user=user, review=self, value=1).exists():
+                return
+            Vote.objects.filter(user=user, review=self).delete()
+            Vote.objects.create(user=user, review=self, value=1)
 
     def downvote(self, user):
         """Create a downvote."""
-
-        # Check if already downvoted.
-        downvoted = Vote.objects.filter(
-            user=user,
-            review=self,
-            value=-1,
-        ).exists()
-
-        # Delete all prior votes.
-        Vote.objects.filter(
-            user=user,
-            review=self,
-        ).delete()
-
-        # Don't downvote again if previously downvoted.
-        if downvoted:
-            return
-
-        Vote.objects.create(
-            value=-1,
-            user=user,
-            review=self,
-        )
+        # Use a transaction to avoid race conditions, not handling IntegrityError
+        with transaction.atomic():
+            if Vote.objects.filter(user=user, review=self, value=-1).exists():
+                return
+            Vote.objects.filter(user=user, review=self).delete()
+            Vote.objects.create(user=user, review=self, value=-1)
 
     @staticmethod
     def display_reviews(course_id, instructor_id, user):
