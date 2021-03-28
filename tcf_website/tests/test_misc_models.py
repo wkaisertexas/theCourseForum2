@@ -4,7 +4,7 @@
 from django.test import TestCase
 
 from .test_utils import setup
-from ..models import Vote
+from ..models import Notification, Vote
 
 
 class MiscModelsTestCase(TestCase):
@@ -49,3 +49,14 @@ class MiscModelsTestCase(TestCase):
             str(vote), "Vote of value -1 for Review by Taylor Comb "
             "(tcf2yay@virginia.edu) for CS 1420 | Software Testing taught by Tom Jefferson "
             "(tjt3rea@virginia.edu) by Kjell Kool ()")
+
+    def test_notification_name(self):
+        """Test __str__ method in Notification model"""
+        notification = Notification.objects.create(
+            user=self.user1,
+            type=Notification.Type.REVIEW_UPVOTED,
+            content='Someone likes your review!',
+        )
+        self.assertEqual(
+            "Notification of type ReviewUpvoted to Taylor Comb (tcf2yay@virginia.edu)",
+            str(notification))

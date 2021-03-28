@@ -718,3 +718,47 @@ class Vote(models.Model):
                 name='unique vote per user and review',
             )
         ]
+
+
+class Notification(models.Model):
+    """
+    Notification model for delivering messages to users.
+
+    `type` and `mime_type` are saved in `Type` and `MimeType` classes,
+    respectively. Although not saving them in the database might hurt
+    consistency, this Django class suits our use case and allows for more
+    flexible changes.
+
+    See https://docs.djangoproject.com/en/dev/ref/models/fields/#enumeration-types
+    """
+    class Type(models.TextChoices):
+        """Specifies the category to which a notification blongs."""
+        REVIEW_UPVOTED = 'ReviewUpvoted', 'When my review is upvoted'
+        NOTICE = 'Notice', 'Announcements from theCourseForum staff'
+        NEW_REVIEW = 'NewReview', 'When a new review is posted for the course I follow'
+
+    class MimeType(models.TextChoices):
+        """Specifies the type of the notification content"""
+        PLAIN = 'text/plain'
+        HTML = 'text/html'
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # Justification for shadowing keyword: https://stackoverflow.com/a/10516154
+    type = models.CharField(choices=Type.choices, max_length=50)
+    content = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+
+    mime_type = models.CharField(
+        choices=MimeType.choices, default=MimeType.PLAIN, max_length=50)
+    title = models.CharField(blank=True, default='', max_length=255)
+    next_path = models.CharField(max_length=255)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['is_read', 'created']),
+        ]
+        ordering = ['-created']
+
+    def __str__(self) -> str:
+        return f'Notification of type {self.type} to {self.user}'

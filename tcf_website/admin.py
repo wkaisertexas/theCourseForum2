@@ -66,6 +66,11 @@ class CourseInstructorGradeAdmin(admin.ModelAdmin):
     search_fields = ['first_name', 'last_name']
 
 
+class NotificationAdmin(admin.ModelAdmin):
+    ordering = ['title', 'content']
+    search_fields = ['title', 'content']
+
+
 admin.site.register(Section, SectionAdmin)
 admin.site.register(Instructor, InstructorAdmin)
 admin.site.register(Course, CourseAdmin)
@@ -75,3 +80,4 @@ admin.site.register(Subdepartment, SubdepartmentAdmin)
 admin.site.register(Semester, SemesterAdmin)
 admin.site.register(CourseGrade, CourseGradeAdmin)
 admin.site.register(CourseInstructorGrade, CourseInstructorGradeAdmin)
+admin.site.register(Notification, NotificationAdmin)
