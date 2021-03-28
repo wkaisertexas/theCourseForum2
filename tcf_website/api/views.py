@@ -2,13 +2,16 @@
 """DRF Viewsets"""
 from django.db.models import Avg, Sum
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+
 from .filters import InstructorFilter
 from ..models import (Course, Department, Instructor, School, Semester,
-                      Subdepartment)
+                      Subdepartment, Notification)
 from .paginations import FlexiblePagination
 from .serializers import (CourseSerializer, CourseSimpleStatsSerializer,
                           CourseAllStatsSerializer,
                           DepartmentSerializer, InstructorSerializer,
+                          NotificationSerializer,
                           SemesterSerializer, SchoolSerializer,
                           SubdepartmentSerializer)
 
@@ -136,3 +139,14 @@ class SemesterViewSet(viewsets.ReadOnlyModelViewSet):
             params['section__instructors'] = self.request.query_params['instructor']
         # Returns filtered, unique semesters in reverse chronological order
         return self.queryset.filter(**params).distinct().order_by('-number')
+
+
+class NotificationViewSet(viewsets.ReadOnlyModelViewSet):
+    """DRF ViewSet for Notification"""
+    queryset = Notification.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = NotificationSerializer
+    pagination_class = FlexiblePagination
+
+    def get_queryset(self):
+        return self.request.user.notification_set.all()
