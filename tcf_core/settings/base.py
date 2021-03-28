@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'cachalot',  # TODO: add Redis?
     'rest_framework',
     'django_filters',
-    'tcf_website',
+    'tcf_website.apps.TcfWebsiteConfig',
 ]
 
 MIDDLEWARE = [
