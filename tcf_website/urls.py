@@ -30,6 +30,10 @@ urlpatterns = [
     path('reviews/check_duplicate', views.review.check_duplicate),
     path('profile', views.profile, name='profile'),
     path('search', views.search, name='search'),
+    path('mark_one_as_read/<int:notification_id>',
+         views.MarkOneAsReadView.as_view(), name='mark_one_as_read'),
+    path('mark_all_as_read', views.MarkAllAsReadView.as_view(),
+         name='mark_all_as_read'),
 
     # API URLs
     path('api/', include('tcf_website.api.urls'), name='api'),
