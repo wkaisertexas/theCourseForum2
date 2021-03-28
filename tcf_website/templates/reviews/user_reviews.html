@@ -19,3 +19,41 @@
     {% include "reviews/reviews.html" with reviews=user.reviews profile=True %}
 </div>
 {% endblock %}
+{% block js %}
+<script>
+jQuery.fn.highlight = function (milliseconds) {
+    // Source: https://stackoverflow.com/a/13106698
+    $(this).each(function () {
+        var el = $(this);
+        $("<div/>")
+        .width(el.outerWidth())
+        .height(el.outerHeight())
+        .css({
+            "position": "absolute",
+            "left": el.offset().left,
+            "top": el.offset().top,
+            "background-color": "#ffff99",
+            "opacity": ".7",
+            "z-index": "9999999"
+        }).appendTo('body').fadeOut(milliseconds).queue(function () { $(this).remove(); });
+    });
+}
+
+function getReviewSelector(reviewId) {
+    return `#review${reviewId}`;
+}
+
+$(document).ready(function() {
+    const params = new URLSearchParams(document.location.search.substring(1));
+    const reviewId = params.get("review_id");
+    if (reviewId === null) return;
+    const element = $(getReviewSelector(reviewId));
+    if (element === null) return;
+    $([document.documentElement, document.body]).animate({
+        scrollTop: element.offset().top
+    }, 500, function(){
+        element.highlight(800);
+    });
+});
+</script>
+{% endblock js %}
