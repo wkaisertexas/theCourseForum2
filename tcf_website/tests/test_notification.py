@@ -22,6 +22,30 @@ class NotificationTests(TestCase):
         )
 
     @suppress_request_warnings
+    def test_mark_one_as_unread_different_user(self):
+        """Test if mark_one_as_unread works fails for a different user"""
+        # user2 tries to mark the user1's notification as unread
+        self.client.force_login(self.user2)
+        response = self.client.post(
+            reverse('mark_one_as_unread', args=(self.notification1.id,)))
+        self.assertEqual(response.status_code, 403)
+
+    def test_mark_one_as_unread_valid(self):
+        """Test if mark_one_as_unread works correctly for valid requests"""
+        # First mark is as read
+        self.notification1.is_read = True
+        self.notification1.save()
+        self.notification1.refresh_from_db()
+        self.assertTrue(self.notification1.is_read)
+        # Now mark it as unread
+        self.client.force_login(self.user1)
+        response = self.client.post(
+            reverse('mark_one_as_unread', args=(self.notification1.id,)))
+        self.notification1.refresh_from_db()
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(self.notification1.is_read)
+
+    @suppress_request_warnings
     def test_mark_one_as_read_different_user(self):
         """Test if mark_one_as_read works fails for a different user"""
         # user2 tries to mark the user1's notification as read

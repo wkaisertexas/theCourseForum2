@@ -12,6 +12,25 @@ from ..models import Notification
 
 
 @method_decorator(csrf_exempt, name='dispatch')
+class MarkOneAsUnreadView(View):
+    """Marks a notification as unread"""
+    http_method_names = ['post']
+
+    def post(self, request, *args, **kwargs):
+        """Mark the notification with the given `notification_id` as unread in
+        an idempotent manner. Can raise Http404 and PermissionDenied."""
+        notification = get_object_or_404(
+            Notification, pk=kwargs.get('notification_id'))
+        if notification.user != request.user:
+            raise PermissionDenied(
+                'You are not allowed to mark this notification as unread.')
+        notification.is_read = False
+        notification.save()
+        return HttpResponse(f"Notification with ID {kwargs['notification_id']}"
+                            " marked as unread.")
+
+
+@method_decorator(csrf_exempt, name='dispatch')
 class MarkOneAsReadView(View):
     """Marks a notification as read"""
     http_method_names = ['post']

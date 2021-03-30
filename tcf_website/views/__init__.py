@@ -12,4 +12,4 @@ from .review import new_review, DeleteReview, upvote, downvote, edit_review
 from .profile import profile, reviews
 from .search import search
 from .discord import post_message
-from .notification import MarkOneAsReadView, MarkAllAsReadView
+from .notification import MarkOneAsUnreadView, MarkOneAsReadView, MarkAllAsReadView

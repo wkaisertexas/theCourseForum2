@@ -30,6 +30,8 @@ urlpatterns = [
     path('reviews/check_duplicate', views.review.check_duplicate),
     path('profile', views.profile, name='profile'),
     path('search', views.search, name='search'),
+    path('mark_one_as_unread/<int:notification_id>',
+         views.MarkOneAsUnreadView.as_view(), name='mark_one_as_unread'),
     path('mark_one_as_read/<int:notification_id>',
          views.MarkOneAsReadView.as_view(), name='mark_one_as_read'),
     path('mark_all_as_read', views.MarkAllAsReadView.as_view(),
