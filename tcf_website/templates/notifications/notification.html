@@ -1,0 +1,66 @@
+{% load static %}
+
+<div class="my-reviews-header d-flex flex-sm-row flex-column mb-4">
+    <h1 class="h2 mt-2 mb-0">My Notifications</h1>
+    <!--<a class="ml-sm-auto mt-2 btn bg-tcf-orange text-white" href="{% url 'mark_all_as_read' %}">
+      Mark All As Read
+    </a>-->
+    <button class="ml-sm-auto mt-2 btn bg-tcf-orange text-white" onClick="readAll()">
+      Mark All As Read
+    </button>
+</div>
+
+{% for n in notifs %}
+<div class="card mb-2" id="">
+  <div style="padding-top: 2rem;" class="card-body text-left">
+      <div style="display: inline-block; float: left">
+        <p style="">{{n.content}}</p>
+        <p style="font-size: 12px">{{n.created}}</p>
+      </div>
+      <div style="height = 100%">
+      {% if n.is_read %}
+      <button onClick="unread('{{n.id}}')" id='{{n.id}}' class="readButton" style="display: inline-block; float: right; height: 20px; width: 20px; border-color:var(--main-color); background-color: white; border-radius: 10px"></button>
+      {% else %}
+      <button onClick="oneread('{{n.id}}')" id='{{n.id}}' class="readButton" style="display: inline-block; float: right; height: 20px; width: 20px; border-color:var(--main-color); background-color: var(--main-color); border-radius: 10px"></button>
+      {% endif %}
+      <br /><br />
+      </div>
+    </div>
+</div>
+{% endfor %}
+
+<script type="text/javascript">
+  function readAll(){
+    $.ajax({
+       type: "POST",
+       url : "/mark_all_as_read",
+       dataType:"html",
+       success: function(data, status, xhr){
+          var read_buttons = document.getElementsByClassName("readButton")
+          for (var i = 0; i < read_buttons.length; i++ ) {
+              read_buttons[i].style.background = "white";
+          }
+      }
+    });
+ }
+ function unread(notif_id){
+   document.getElementById(notif_id).style.background = "#274F97";
+   $.ajax({
+      type: "POST",
+      url : "/mark_one_as_unread/"+notif_id,
+      dataType:"html",
+      success: function(data, status, xhr){
+     }
+   });
+ }
+ function oneread(notif_id){
+   document.getElementById(notif_id).style.background = "white";
+   $.ajax({
+      type: "POST",
+      url : "/mark_one_as_read/"+notif_id,
+      dataType:"html",
+      success: function(data, status, xhr){
+     }
+   });
+ }
+</script>

@@ -8,7 +8,7 @@ from django import forms
 from django.forms import ModelForm
 from django.http import HttpResponseRedirect
 from .browse import safe_round
-from ..models import Review, User
+from ..models import Review, User, Notification
 
 
 class ProfileForm(ModelForm):
@@ -66,8 +66,13 @@ def reviews(request):
             Avg('review__recommendability')
         ) / 3,
     )
-    # Merge the two dictionaries
+    # Get all notifications for the user
+
+    notifications = Notification.objects.filter(user=request.user)
+    # Merge the three dictionaries
     merged = upvote_stat | other_stats
     # Round floats
     stats = {key: safe_round(value) for key, value in merged.items()}
+    stats['notifs'] = notifications
+    print(stats['notifs'])
     return render(request, 'reviews/user_reviews.html', context=stats)
