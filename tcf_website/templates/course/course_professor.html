@@ -194,7 +194,7 @@
             </div>
         </div>
 
-        <div class="reviews-container mb-5">
+        <div class="reviews-container mb-5" id="reviews-container">
             <div class="reviews-toolbar pb-2 d-flex flex-md-row flex-column justify-content-left justify-content-md-center">
                 <h3 class="reviews-heading mb-0 mt-1 mr-4">{{ reviews|length }} {% if reviews|length == 1 %} Comment {% else %} Comments {% endif %}</h3>
                 <div class="reviews-options d-flex flex-sm-row flex-column col p-0">
@@ -227,12 +227,17 @@
                     {% endif %}
                 </div>
             </div>
-            {% include "reviews/reviews.html" with reviews=reviews %}
+            {% include "reviews/reviews.html" with reviews=reviews replies=replies %}
         </div>
     </div>
 {% endblock %}
 
 {% block js %}
+    <script>
+        window.onload = function load() {
+            $("#reviews-container").load(location.href + " #reviews-container>*", "");
+        }
+    </script>
     <!-- For instructor data -->
     <script> // Create global js vars from template context vars
        var courseID = "{{ course_id|escapejs }}";
@@ -254,4 +259,37 @@
         import {loadData} from "{% static 'course/javascript/course_data.js' %}";
         loadData(JSON.parse("{{ data|escapejs }}"))
     </script>
+
+    <!-- For reply form submission -->
+    <script>
+        //$("#reviews-container").load(location.href + " #reviews-container>*", "");
+        // location.reload(true);
+        $(document).ready(function () {
+            $("form").submit(function(e) {
+                e.preventDefault();
+
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr('action'),
+                    data: $(this).serialize(),
+                    async: false,
+                    success: function (check) {
+                        if(check.reply) {
+                            $("#reviews-container").load(location.href + " #reviews-container>*", "");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!--<script>
+        $(document).ready(function () {
+        // Stop normal submit to check for duplicate review with ajax request
+        $("button").click(function(e) {
+            var btnID = $(this).attr('id');
+            if(btnID.contains("reviewsCollapse")) {
+
+    </script>-->
+
 {% endblock %}

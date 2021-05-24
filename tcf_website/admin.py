@@ -11,6 +11,7 @@ from .models import *
 admin.site.register(User)
 admin.site.register(Review)
 admin.site.register(Vote)
+admin.site.register(Reply)
 
 
 class SchoolAdmin(admin.ModelAdmin):
@@ -64,6 +65,9 @@ class CourseGradeAdmin(admin.ModelAdmin):
 class CourseInstructorGradeAdmin(admin.ModelAdmin):
     ordering = ['last_name', 'first_name']
     search_fields = ['first_name', 'last_name']
+
+class ReplyAdmin(admin.ModelAdmin):
+    ordering = ['modified']
 
 
 admin.site.register(Section, SectionAdmin)

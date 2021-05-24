@@ -724,6 +724,31 @@ class Review(models.Model):
     #     ]
 
 
+class Reply(models.Model):
+    """Reply Model
+
+    Belongs to a User.
+    Belongs to a Review
+
+    Has a Course.
+    """
+
+    # Reply text. Required.
+    text = models.TextField(null=True)
+    # Review user foreign key. Required.
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # Review foreign key. Required.
+    review = models.ForeignKey(Review, on_delete=models.CASCADE)
+
+    # Review created date. Required.
+    created = models.DateTimeField(auto_now_add=True)
+    # Review modified date. Required.
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('modified',)
+
+
 class Vote(models.Model):
     """Vote model.
 

@@ -10,7 +10,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 
-from ..models import Review
+from ..models import Review, Reply
 
 # pylint: disable=fixme
 # Disable pylint errors on TODO messages, such as below
@@ -35,6 +35,18 @@ class ReviewForm(forms.ModelForm):
         instance.hours_per_week = \
             instance.amount_reading + instance.amount_writing + \
             instance.amount_group + instance.amount_homework
+        if commit:
+            instance.save()
+        return instance
+
+
+class ReplyForm(forms.ModelForm):
+    class Meta:
+        model = Reply
+        fields = ['text']
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
         if commit:
             instance.save()
         return instance
@@ -83,7 +95,25 @@ def new_review(request):
     return render(request, 'reviews/new_review.html')
 
 
-@login_required()
+@login_required
+def new_reply(request, review_id):
+    """Reply creation view."""
+
+    if request.method == 'POST':
+        form = ReplyForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.review = Review.objects.get(pk=review_id)
+
+            instance.save()
+
+            return JsonResponse({'reply': True})
+
+    return redirect()
+
+
+@login_required
 def check_duplicate(request):
     """Check for duplicate reviews when a user submits a review
     based on if it's the same course with the same instructor/semester.
