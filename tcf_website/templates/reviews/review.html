@@ -1,4 +1,5 @@
 {% load static %}
+
 <link rel="stylesheet" href="{% static 'reviews/review.css' %}" />
 
 <div id="review{{review.id}}" class="review card mb-2">
@@ -75,6 +76,13 @@
                           </a>
                           <span class="downvoteCount">{{ review.count_votes.downvotes }}</span>
                       </div>
+                      <div>
+                          <a class="btn btn-primary" data-toggle="collapse" href="#repliesCollapse{{review.id}}" role="button"
+                             aria-expanded="false" aria-controls="#repliesCollapse{{review.id}}">
+                              <i class="fas fa-comment-alt"></i>
+                              <span>Comment!</span>
+                          </a>
+                      </div>
                     </div>
 
                     <!-- Review Ratings -->
@@ -104,9 +112,21 @@
                             {{ review.hours_per_week }}
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
+</div>
+
+<div class="collapse" id="repliesCollapse{{review.id}}">
+    <form class="card-body px-md-5" id="replyForm{{review.id}}" action="{% url 'new_reply' review_id=review.id %}" method="POST">
+        {% csrf_token %}
+        <textarea id="replyText{{review.id}}" name="text" rows="5" minlength="10" maxlength="5000" placeholder="Comment your thoughts..."></textarea>
+        <div>
+            <button type="submit" class="btn btn-primary mx-auto" id="replyBtn{{review.id}}">Reply!</button>
+        </div>
+    </form>
+    {% for rep in review.reply_set.all %}
+        {% include "reviews/reply.html" with reply=rep reply_count=forloop.counter %}
+    {% endfor %}
 </div>
