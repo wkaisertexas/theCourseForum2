@@ -204,3 +204,37 @@ def edit_review(request, review_id):
         return render(request, 'reviews/edit_review.html', {'form': form})
     form = ReviewForm(instance=review)
     return render(request, 'reviews/edit_review.html', {'form': form})
+
+@login_required()
+def delete_reply(request, reply_id):
+    """Reply deletion view."""
+    reply = get_object_or_404(Review, pk=reply_id)
+    if reply.user != request.user:
+        raise PermissionDenied('You are not allowed to edit this reply!')
+
+    if request.method == 'POST':
+        reply.delete()
+        return JsonResponse({'reply': True})
+
+    return JsonResponse({'reply': False})
+
+
+
+@login_required()
+def edit_reply(request, reply_id):
+    """Reply modification view."""
+    reply = get_object_or_404(Review, pk=reply_id)
+    if reply.user != request.user:
+        raise PermissionDenied('You are not allowed to edit this reply!')
+
+    if request.method == 'POST':
+        form = ReplyForm(request.POST, instance=reply)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                f'Successfully updated your reply to {form.instance.review}!')
+            return JsonResponse({'edit': True})
+        messages.error(request, form.errors)
+        return JsonResponse({'edit': False})
+    return JsonResponse({'edit': False})

@@ -233,11 +233,6 @@
 {% endblock %}
 
 {% block js %}
-    <script>
-        window.onload = function load() {
-            $("#reviews-container").load(location.href + " #reviews-container>*", "");
-        }
-    </script>
     <!-- For instructor data -->
     <script> // Create global js vars from template context vars
        var courseID = "{{ course_id|escapejs }}";
@@ -261,35 +256,15 @@
     </script>
 
     <!-- For reply form submission -->
-    <script>
-        //$("#reviews-container").load(location.href + " #reviews-container>*", "");
-        // location.reload(true);
-        $(document).ready(function () {
-            $("form").submit(function(e) {
-                e.preventDefault();
-
-                $.ajax({
-                    type: "POST",
-                    url: $(this).attr('action'),
-                    data: $(this).serialize(),
-                    async: false,
-                    success: function (check) {
-                        if(check.reply) {
-                            $("#reviews-container").load(location.href + " #reviews-container>*", "");
-                        }
-                    }
-                });
+    <script src="{% static 'course/javascript/reply_form.js' %}"></script>
+    <!-- Show login modal if user clicks reply text area but is not logged in -->
+    <script type="module">
+        $(function () {
+            $('textarea').focus(function() {
+                {% if not user.is_authenticated %}
+                    $("#loginModal").modal();
+                {% endif %}
             });
         });
     </script>
-
-    <!--<script>
-        $(document).ready(function () {
-        // Stop normal submit to check for duplicate review with ajax request
-        $("button").click(function(e) {
-            var btnID = $(this).attr('id');
-            if(btnID.contains("reviewsCollapse")) {
-
-    </script>-->
-
 {% endblock %}

@@ -1,55 +1,69 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'reviews/reply.css' %}" />
 
-<div id="reply{{reply.id}}" class="review card mb-2">
+<div id="reply{{reply.id}}">
     <div class="card-body text-left">
         <div class="row">
-            <!-- Review Main Content -->
-            <div class="review-body col-xs-12 col-md-12 col-lg-12">
-                <!-- Review header content (subject, actions, text) -->
-                <div class="reply-header">
+            <!-- Reply Main Content -->
+            <div class="review-body col-xs-12 col-md-12 col-lg-12 bg-light mb-3">
+                <!-- Reply header content -->
+                <div class="review-header">
                   <div class="d-flex justify-content-between">
                     <h6 id="order" class="text-muted">#{{reply_count}}</h6>
                     <h6 id="date" class="text-muted">Updated {{ reply.modified|date:"n/d/y" }}</h6>
                   </div>
                 </div>
 
-                <div class="reply-content mb-2">
-                  <!-- Max-height container for the review text collapse feature -->
-                  <div class="reply-text-body collapse" id="replyText{{reply.id}}"
+                <div class="review-content mb-2">
+                  <!-- Max-height container for the reply text collapse feature -->
+                  <div class="review-text-body collapse" id="replyText{{reply.id}}"
                      aria-expanded="false">
-                     <!-- Full review text -->
-                    <p class="reply-text-full">{{ reply.text }}</p>
+                     <!-- Full reply text -->
+                    <p class="review-text-full">{{ reply.text }}</p>
                   </div>
                   <!-- Collapser link (click target spans entire row block) -->
-                  <a role="button" class="reply-collapse-link btn-block p-1 collapsed"
+                  <a role="button" class="review-collapse-link btn-block p-1 collapsed"
                      data-toggle="collapse" href="#replyText{{reply.id}}"
                      aria-expanded="false" aria-controls="replyText{{reply.id}}">
-                     <!-- Note: collapser text ("See more...") is encoded in review.css for this link -->
+                     <!-- Note: collapser text ("See more...") is encoded in reply.css for this link -->
                   </a>
                 </div>
 
-                <div class="reply-footer row mt-3">
-                    <!-- Review upvote/downvote container -->
+                <div class="review-footer row mt-3">
+                    <!-- Reply upvote/downvote container -->
                     <div class="vote-container col-sm-4 d-flex align-items-end text-center text-muted flex-wrap">
                       <!-- Hidden HTML tag to sort reviews by helpfulness (net upvotes)-->
                       <span id="vote-count" hidden>{{ review.sum_votes }}</span>
                       <div class="mr-3 mr-sm-4">
                           <!--Voting logic is implemented in the <script> tag of reviews.html-->
-                          <a id="upvoteReply{{reply.id}}" href="#loginModal" data-toggle="modal"
+                          <a id="upvote{{review.id}}" href="#loginModal" data-toggle="modal"
                              class="upvote {% if review.user_vote == 1 %}active{% endif %}">
                               <i class="fa fa-thumbs-up"></i>
                           </a>
                           <span class="upvoteCount">{{ review.count_votes.upvotes }}</span>
                       </div>
                       <div class="mr-3 mr-sm-4">
-                          <a id="downvoteReply{{reply.id}}" href="#loginModal" data-toggle="modal"
+                          <a id="downvote{{review.id}}" href="#loginModal" data-toggle="modal"
                              class="downvote {% if review.user_vote == -1 %}active{% endif %}">
                               <i class="fa fa-thumbs-down"></i>
                           </a>
                           <span class="downvoteCount">{{ review.count_votes.downvotes }}</span>
                       </div>
                     </div>
+                    {% if user == reply.user %}
+                    <div class="review-ratings col-sm-8 d-flex align-items-end justify-content-end text-center text-muted flex-wrap mb-2">
+                        <div class="review-actions d-inline-flex">
+                          <a class="review-edit h5 px-2 text-tcf-blue" role="button" id="editReply{{reply.id}}" onclick="">
+                              <i class="fas fa-pencil-alt"></i>
+                          </a>
+                          <a class="review-delete h5 pl-2 text-danger" type="button"
+                                  data-toggle="modal" data-target="#deleteReplyModal{{reply.id}}">
+                            <i class="fa fa-trash-o"></i>
+                          </a>
+                          {% include "reviews/delete_reply_modal.html" with reply_id=reply.id %}
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
