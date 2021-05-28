@@ -21,6 +21,8 @@ urlpatterns = [
          views.instructor_view, name='instructor'),
     path('reviews/new', views.new_review, name='new_review'),
     path('reviews/<int:review_id>/reply', views.review.new_reply, name="new_reply"),
+    path('reviews/<int:reply_id>/delete>', views.review.delete_reply, name="delete_reply"),
+    path('reviews/<int:reply_id>/edit>', views.review.edit_reply, name="edit_reply"),
     path('reviews/<int:pk>/delete',
          views.DeleteReview.as_view(), name='delete_review'),
     path('reviews/<int:review_id>/edit',
