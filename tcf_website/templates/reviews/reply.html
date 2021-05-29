@@ -60,7 +60,7 @@
                                   data-toggle="modal" data-target="#deleteReplyModal{{reply.id}}">
                             <i class="fa fa-trash-o"></i>
                           </a>
-                          {% include "reviews/delete_reply_modal.html" with reply_id=reply.id %}
+                          {% include "reviews/delete_reply_modal.html" with reply_id=reply.id review_id=review.id %}
                         </div>
                     </div>
                     {% endif %}

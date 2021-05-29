@@ -208,7 +208,7 @@ def edit_review(request, review_id):
 @login_required()
 def delete_reply(request, reply_id):
     """Reply deletion view."""
-    reply = get_object_or_404(Review, pk=reply_id)
+    reply = Reply.objects.get(pk=reply_id)
     if reply.user != request.user:
         raise PermissionDenied('You are not allowed to edit this reply!')
 
