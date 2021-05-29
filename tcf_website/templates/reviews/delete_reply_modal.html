@@ -13,9 +13,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-        <form method="POST" action="{% url 'delete_reply' reply_id=reply_id %}">
+        <form method="POST" action="{% url 'delete_reply' reply_id=reply_id %}" id="deleteReplyTo{{review_id}}" name="deleteModal{{reply_id}}">
            {% csrf_token %}
-           <button type="submit" value="DELETE" class="btn btn-danger">Yes</button>
+           <button type="submit" value="deleteReply" class="btn btn-danger" data-toggle="modal" data-target="#deleteReplyModal{{reply_id}}" data-backdrop="false">Yes</button>
         </form>
       </div>
     </div>

@@ -117,11 +117,17 @@
         </div>
     </div>
     <div class="collapse" id="repliesCollapse{{review.id}}">
-        <form class="card-body px-md-5" id="replyForm{{review.id}}" action="{% url 'new_reply' review_id=review.id %}" method="POST">
+        <div class="card-body text-left px-md-5">
+        <div class="row">
+            <div class="review-body col-xs-12 col-md-12 col-lg-12 bg-light mb-3">
+        <form class="card-body" id="replyForm{{review.id}}" action="{% url 'new_reply' review_id=review.id %}" method="POST">
             {% csrf_token %}
             <textarea class="form-control bg-light mb-3" id="replyText{{review.id}}" name="text" rows="5" minlength="10" maxlength="5000" placeholder="Comment your thoughts..." rows="5"></textarea>
             <button type="submit" class="btn btn-primary mx-auto" id="replyBtn{{review.id}}">Reply!</button>
         </form>
+        </div>
+        </div>
+        </div>
         {% for rep in review.reply_set.all %}
             {% include "reviews/reply.html" with reply=rep reply_count=forloop.counter %}
         {% endfor %}

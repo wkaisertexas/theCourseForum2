@@ -746,7 +746,7 @@ class Reply(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ('modified',)
+        ordering = ('created',)
 
 
 class Vote(models.Model):
