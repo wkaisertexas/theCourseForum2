@@ -80,7 +80,7 @@
                           <a class="btn btn-primary" data-toggle="collapse" href="#repliesCollapse{{review.id}}" role="button"
                              aria-expanded="false" aria-controls="#repliesCollapse{{review.id}}">
                               <i class="fas fa-comment-alt"></i>
-                              <span>Comment!</span>
+                              <span>{{ review.reply_set.all|length }} {% if review.reply_set.all|length == 1 %} Reply {% else %} Replies {% endif %}</span>
                           </a>
                       </div>
                     </div>
@@ -118,15 +118,17 @@
     </div>
     <div class="collapse" id="repliesCollapse{{review.id}}">
         <div class="card-body text-left px-md-5">
-        <div class="row">
-            <div class="review-body col-xs-12 col-md-12 col-lg-12 bg-light mb-3">
-        <form class="card-body" id="replyForm{{review.id}}" action="{% url 'new_reply' review_id=review.id %}" method="POST">
-            {% csrf_token %}
-            <textarea class="form-control bg-light mb-3" id="replyText{{review.id}}" name="text" rows="5" minlength="10" maxlength="5000" placeholder="Comment your thoughts..." rows="5"></textarea>
-            <button type="submit" class="btn btn-primary mx-auto" id="replyBtn{{review.id}}">Reply!</button>
-        </form>
-        </div>
-        </div>
+            <div class="row">
+                <div class="review-body col-xs-12 col-md-12 col-lg-12 bg-light mb-3">
+                    <form class="card-body" id="replyForm{{review.id}}" action="{% url 'new_reply' review_id=review.id %}" method="POST">
+                        {% csrf_token %}
+                        <textarea class="form-control bg-light mb-3" id="replyText{{review.id}}" name="text" rows="5" minlength="10" maxlength="5000" placeholder="Comment your thoughts..." rows="5"></textarea>
+                        <div align="right">
+                            <button type="submit" class="btn btn-primary mx-auto" id="replyBtn{{review.id}}">Reply!</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
         {% for rep in review.reply_set.all %}
             {% include "reviews/reply.html" with reply=rep reply_count=forloop.counter %}

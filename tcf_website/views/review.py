@@ -45,12 +45,6 @@ class ReplyForm(forms.ModelForm):
         model = Reply
         fields = ['text']
 
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        if commit:
-            instance.save()
-        return instance
-
 
 @login_required
 def upvote(request, review_id):
@@ -219,22 +213,24 @@ def delete_reply(request, reply_id):
     return JsonResponse({'reply': False})
 
 
-
 @login_required()
 def edit_reply(request, reply_id):
     """Reply modification view."""
-    reply = get_object_or_404(Review, pk=reply_id)
+    reply = Reply.objects.get(pk=reply_id)
     if reply.user != request.user:
         raise PermissionDenied('You are not allowed to edit this reply!')
-
     if request.method == 'POST':
         form = ReplyForm(request.POST, instance=reply)
         if form.is_valid():
-            form.save()
-            messages.success(
+            reply = form.save()
+            reply.text = form.cleaned_data['text']
+            reply.save()
+            """messages.success(
                 request,
                 f'Successfully updated your reply to {form.instance.review}!')
-            return JsonResponse({'edit': True})
-        messages.error(request, form.errors)
-        return JsonResponse({'edit': False})
+                """
+            return JsonResponse({'reply': True})
+
+    form = ReplyForm(instance=reply)
+    messages.error(request, form.errors)
     return JsonResponse({'edit': False})
