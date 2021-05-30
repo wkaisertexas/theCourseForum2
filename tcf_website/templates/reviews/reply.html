@@ -19,8 +19,16 @@
                   <div class="review-text-body collapse" id="replyText{{reply.id}}"
                      aria-expanded="false">
                      <!-- Full reply text -->
-                    <p class="review-text-full">{{ reply.text }}</p>
+                      <form id="editReplyForm{{review.id}}" action="{% url 'edit_reply' reply_id=reply.id %}" method="POST">
+                      {% csrf_token %}
+                        <textarea readonly class="form-control-plaintext" id="editReplyField{{reply.id}}">{{ reply.text }}</textarea>
+                        <div align="right" id="saveReplyEdit{{reply.id}}" style="display: none">
+                            <br>
+                            <button type="submit" class="btn btn-primary mx-auto" onclick="editReply({{reply.id}})">Save</button>
+                        </div>
+                      </form>
                   </div>
+
                   <!-- Collapser link (click target spans entire row block) -->
                   <a role="button" class="review-collapse-link btn-block p-1 collapsed"
                      data-toggle="collapse" href="#replyText{{reply.id}}"
@@ -53,7 +61,7 @@
                     {% if user == reply.user %}
                     <div class="review-ratings col-sm-8 d-flex align-items-end justify-content-end text-center text-muted flex-wrap mb-2">
                         <div class="review-actions d-inline-flex">
-                          <a class="review-edit h5 px-2 text-tcf-blue" role="button" id="editReply{{reply.id}}" onclick="">
+                          <a class="review-edit h5 px-2 text-tcf-blue" role="button" id="editReply{{reply.id}}" onclick="showEditReply({{reply.id}});">
                               <i class="fas fa-pencil-alt"></i>
                           </a>
                           <a class="review-delete h5 pl-2 text-danger" type="button"
