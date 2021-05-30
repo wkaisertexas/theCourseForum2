@@ -21,7 +21,8 @@
                      <!-- Full reply text -->
                       <form id="editReplyForm{{review.id}}" action="{% url 'edit_reply' reply_id=reply.id %}" method="POST">
                       {% csrf_token %}
-                        <textarea readonly class="form-control-plaintext" id="editReplyField{{reply.id}}">{{ reply.text }}</textarea>
+                        <textarea readonly class="form-control-plaintext" id="editReplyField{{reply.id}}" name="text" minlength="10" maxlength="5000">{{ reply.text }}</textarea>
+                          <!-- Hide save button until user clikcs edit reply -->
                         <div align="right" id="saveReplyEdit{{reply.id}}" style="display: none">
                             <br>
                             <button type="submit" class="btn btn-primary mx-auto" onclick="editReply({{reply.id}})">Save</button>
@@ -62,11 +63,11 @@
                     <div class="review-ratings col-sm-8 d-flex align-items-end justify-content-end text-center text-muted flex-wrap mb-2">
                         <div class="review-actions d-inline-flex">
                           <a class="review-edit h5 px-2 text-tcf-blue" role="button" id="editReply{{reply.id}}" onclick="showEditReply({{reply.id}});">
-                              <i class="fas fa-pencil-alt"></i>
+                              <i class="fas fa-pencil-alt" data-toggle="tooltip" data-placement="bottom" title="Edit Reply"></i>
                           </a>
                           <a class="review-delete h5 pl-2 text-danger" type="button"
                                   data-toggle="modal" data-target="#deleteReplyModal{{reply.id}}">
-                            <i class="fa fa-trash-o"></i>
+                            <i class="fa fa-trash-o" data-toggle="tooltip" data-placement="bottom" title="Delete Reply"></i>
                           </a>
                           {% include "reviews/delete_reply_modal.html" with reply_id=reply.id review_id=review.id %}
                         </div>

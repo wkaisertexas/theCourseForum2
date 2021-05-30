@@ -222,9 +222,7 @@ def edit_reply(request, reply_id):
     if request.method == 'POST':
         form = ReplyForm(request.POST, instance=reply)
         if form.is_valid():
-            reply = form.save()
-            reply.text = form.cleaned_data['text']
-            reply.save()
+            form.save()
             """messages.success(
                 request,
                 f'Successfully updated your reply to {form.instance.review}!')
