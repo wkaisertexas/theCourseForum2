@@ -40,6 +40,8 @@ $(function () {
                     // Only update replies collapse if reply is being edited since total number of replies is unchanged
                     if(checkForm.includes("edit")) {
                         $("#repliesCollapse" + reviewID).load(location.href + " #repliesCollapse" + reviewID + ">*", "");
+                        // After submitting edit reply form, go back to original <p> tag for reply
+                        editReply($(this).attr('name').substring(17));
                     } else {
                         $("#review" + reviewID).load(location.href + " #review" + reviewID + ">*", "");
                     }
@@ -52,13 +54,50 @@ $(function () {
 // Function that shows save button and makes reply editable when user tries to edit their reply
 function showEditReply(reply_id) {
     $("#saveReplyEdit" + reply_id).css("display", "block");
-    document.getElementById("editReplyField" + reply_id).readOnly = false;
-    document.getElementById("editReplyField" + reply_id).className = "form-control";
+
+    // Grab original tag
+    var original = document.getElementById('editReplyField' + reply_id);
+    // Create a replacement tag
+    var replacement = document.createElement('textarea');
+
+    // Grab all of the original's attributes, and pass them to the replacement
+    for(var i = 0, l = original.attributes.length; i < l; ++i){
+        var nodeName = original.attributes.item(i).nodeName;
+        var nodeValue = original.attributes.item(i).nodeValue;
+
+        replacement.setAttribute(nodeName, nodeValue);
+    }
+
+    // form-control so that user can edit their reply
+    replacement.className = "form-control"
+    // move text from p to new text area
+    replacement.innerHTML = original.innerHTML;
+
+    // Swap to textarea form so that user can edit their reply
+    original.parentNode.replaceChild(replacement, original);
 }
 
 // Function to handle when user clicks save to a reply edit
 function editReply(reply_id) {
+    // Hide save button
     $("#saveReplyEdit" + reply_id).css("display", "none");
-    document.getElementById("editReplyField" + reply_id).readOnly = true;
-    document.getElementById("editReplyField" + reply_id).className = "form-control-plaintext";
+
+    var original = document.getElementById('editReplyField' + reply_id);
+    // Create a replacement tag
+    var replacement = document.createElement('p');
+
+    // Grab all of the original's attributes, and pass them to the replacement
+    for(var i = 0, l = original.attributes.length; i < l; ++i){
+        var nodeName = original.attributes.item(i).nodeName;
+        var nodeValue = original.attributes.item(i).nodeValue;
+
+        replacement.setAttribute(nodeName, nodeValue);
+    }
+
+    // Take off form-control classname
+    replacement.className = ""
+    replacement.innerHTML = original.innerHTML;
+
+    // Swap back to p tag for normal reply card
+    original.parentNode.replaceChild(replacement, original);
 }
