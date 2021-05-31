@@ -62,3 +62,70 @@ function editReply(reply_id) {
     document.getElementById("editReplyField" + reply_id).readOnly = true;
     document.getElementById("editReplyField" + reply_id).className = "form-control-plaintext";
 }
+
+/* For reply upvote/downvote functionality */
+function handleReplyVote(replyID, isUpvote) {
+    const upvoteCountElem = $(`#reply{replyID} .upvoteCount`);
+    const downvoteCountElem = $(`#reply{replyID} .downvoteCount`);
+    const upvoteCount = parseInt(upvoteCountElem.text());
+    const downvoteCount = parseInt(downvoteCountElem.text());
+
+    let elem;
+    let otherElem;
+    let endpoint;
+    let newUpvoteCount;
+    let newDownvoteCount;
+
+    if (isUpvote) {
+        elem = $(`#reply{replyID} .upvote`);
+        otherElem = $(`#reply{replyID} .downvote`);
+        endpoint = `/reviews/${replyID}/upvote`;
+
+        // If already upvoted, subtract 1.
+        if (elem.hasClass("active")) {
+            newUpvoteCount = upvoteCount - 1;
+        // If already downvoted, add 1 to upvote and subtract 1 from downvote.
+        } else if (otherElem.hasClass("active")) {
+            newUpvoteCount = upvoteCount + 1;
+            newDownvoteCount = downvoteCount - 1;
+        // Otherwise add 1.
+        } else {
+            newUpvoteCount = upvoteCount + 1;
+        }
+    } else {
+        elem = $(`#reply{replyID} .downvote`);
+        otherElem = $(`#reply{replyID} .upvote`);
+        endpoint = `/reviews/${replyID}/downvote`;
+
+        // If already downvoted, add 1.
+        if (elem.hasClass("active")) {
+            newDownvoteCount = downvoteCount - 1;
+        // If already upvoted, add 1 to downvote and subtract 1 from upvote.
+        } else if (otherElem.hasClass("active")) {
+            newDownvoteCount = downvoteCount + 1;
+            newUpvoteCount = upvoteCount - 1;
+        // Otherwise subtract 1.
+        } else {
+            newDownvoteCount = downvoteCount + 1;
+        }
+    }
+
+    // POST to upvote or downvote endpoint.
+    fetch(endpoint, {
+        method: "post",
+        headers: { "X-CSRFToken": getCookie("csrftoken") }
+    });
+
+    // Update vote text.
+    upvoteCountElem.text(newUpvoteCount);
+    downvoteCountElem.text(newDownvoteCount);
+
+    if (elem.hasClass("active")) {
+        elem.removeClass("active");
+    } else {
+        elem.addClass("active");
+        otherElem.removeClass("active");
+    }
+}
+
+export { handleReplyVote };
