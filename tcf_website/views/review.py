@@ -223,10 +223,6 @@ def edit_reply(request, reply_id):
         form = ReplyForm(request.POST, instance=reply)
         if form.is_valid():
             form.save()
-            """messages.success(
-                request,
-                f'Successfully updated your reply to {form.instance.review}!')
-                """
             return JsonResponse({'reply': True})
 
     form = ReplyForm(instance=reply)

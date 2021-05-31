@@ -745,6 +745,9 @@ class Reply(models.Model):
     # Review modified date. Required.
     modified = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f"Reply by {self.user} to {self.review}"
+
     class Meta:
         ordering = ('created',)
 
