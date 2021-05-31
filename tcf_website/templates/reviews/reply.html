@@ -5,40 +5,41 @@
     <div class="card-body text-left">
         <div class="row">
             <!-- Reply Main Content -->
-            <div class="review-body col-xs-12 col-md-12 col-lg-12 bg-light mb-3">
+            <div class="reply-body col-xs-12 col-md-12 col-lg-12 bg-light mb-3">
                 <!-- Reply header content -->
-                <div class="review-header">
+                <div class="reply-header">
                   <div class="d-flex justify-content-between">
                     <h6 id="order" class="text-muted">#{{reply_count}}</h6>
                     <h6 id="date" class="text-muted">Updated {{ reply.modified|date:"n/d/y" }}</h6>
                   </div>
                 </div>
 
-                <div class="review-content mb-2">
+                <div class="reply-content mb-2">
                   <!-- Max-height container for the reply text collapse feature -->
-                  <div class="review-text-body collapse" id="replyText{{reply.id}}"
+                  <div class="reply-text-body collapse" id="replyText{{reply.id}}"
                      aria-expanded="false">
                      <!-- Full reply text -->
-                      <form id="editReplyForm{{review.id}}" action="{% url 'edit_reply' reply_id=reply.id %}" method="POST">
+                      <form id="editReplyForm{{review.id}}" name="editReplyFormName{{reply.id}}" action="{% url 'edit_reply' reply_id=reply.id %}" method="POST">
                       {% csrf_token %}
-                        <textarea readonly class="form-control-plaintext" id="editReplyField{{reply.id}}" name="text" minlength="10" maxlength="5000">{{ reply.text }}</textarea>
-                          <!-- Hide save button until user clikcs edit reply -->
+                        <p class="reply-text-full" id="editReplyField{{reply.id}}" name="text" minlength="10" maxlength="5000"
+                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' onfocus='this.style.height = this.scrollHeight + "px"'>{{ reply.text }}</p>
+                          <!-- Hide save button until user clicks edit reply -->
                         <div align="right" id="saveReplyEdit{{reply.id}}" style="display: none">
                             <br>
-                            <button type="submit" class="btn btn-primary mx-auto" onclick="editReply({{reply.id}})">Save</button>
+                            <button type="submit" class="btn btn-primary mx-auto">Save</button>
                         </div>
                       </form>
                   </div>
 
                   <!-- Collapser link (click target spans entire row block) -->
-                  <a role="button" class="review-collapse-link btn-block p-1 collapsed"
+                  <a role="button" class="reply-collapse-link btn-block p-1 collapsed"
                      data-toggle="collapse" href="#replyText{{reply.id}}"
                      aria-expanded="false" aria-controls="replyText{{reply.id}}">
                      <!-- Note: collapser text ("See more...") is encoded in reply.css for this link -->
                   </a>
                 </div>
 
-                <div class="review-footer row mt-3">
+                <div class="reply-footer row mt-3">
                     <!-- Reply upvote/downvote container -->
                     <div class="vote-container col-sm-4 d-flex align-items-end text-center text-muted flex-wrap">
                       <!-- Hidden HTML tag to sort reviews by helpfulness (net upvotes)-->
@@ -60,12 +61,12 @@
                       </div>
                     </div>
                     {% if user == reply.user %}
-                    <div class="review-ratings col-sm-8 d-flex align-items-end justify-content-end text-center text-muted flex-wrap mb-2">
-                        <div class="review-actions d-inline-flex">
-                          <a class="review-edit h5 px-2 text-tcf-blue" role="button" id="editReply{{reply.id}}" onclick="showEditReply({{reply.id}});">
+                    <div class="reply-ratings col-sm-8 d-flex align-items-end justify-content-end text-center text-muted flex-wrap mb-2">
+                        <div class="reply-actions d-inline-flex">
+                          <a class="reply-edit h5 px-2 text-tcf-blue" role="button" id="editReply{{reply.id}}" onclick="showEditReply({{reply.id}});">
                               <i class="fas fa-pencil-alt" data-toggle="tooltip" data-placement="bottom" title="Edit Reply"></i>
                           </a>
-                          <a class="review-delete h5 pl-2 text-danger" type="button"
+                          <a class="reply-delete h5 pl-2 text-danger" type="button"
                                   data-toggle="modal" data-target="#deleteReplyModal{{reply.id}}">
                             <i class="fa fa-trash-o" data-toggle="tooltip" data-placement="bottom" title="Delete Reply"></i>
                           </a>

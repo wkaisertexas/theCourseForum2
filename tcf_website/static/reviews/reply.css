@@ -1,10 +1,10 @@
 .reply-content .reply-text-body.collapse:not(.show) {
   display: block;
-  height: 12rem;
+  height: 9rem;
   overflow: hidden;
 }
 .reply-content .reply-text-body.collapsing {
-  height: 12rem;
+  height: 9rem;
 }
 
 .reply-content a.collapsed::after {
@@ -37,10 +37,4 @@
 
 .tooltip-inner {
   margin: 0;
-}
-
-input[readonly]{
-  background-color:transparent;
-  border: 0;
-  font-size: 1em;
 }

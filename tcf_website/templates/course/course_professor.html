@@ -259,12 +259,10 @@
     <script src="{% static 'course/javascript/reply.js' %}"></script>
     <!-- Show login modal if user clicks reply text area but is not logged in -->
     <script type="module">
-        $(function () {
-            $('textarea').focus(function() {
-                {% if not user.is_authenticated %}
-                    $("#loginModal").modal();
-                {% endif %}
-            });
+        $('textarea').focus(function() {
+            {% if not user.is_authenticated %}
+                $("#loginModal").modal();
+            {% endif %}
         });
     </script>
 {% endblock %}

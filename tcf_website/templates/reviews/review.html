@@ -122,7 +122,8 @@
                 <div class="review-body col-xs-12 col-md-12 col-lg-12 bg-light mb-3">
                     <form class="card-body" id="replyForm{{review.id}}" action="{% url 'new_reply' review_id=review.id %}" method="POST">
                         {% csrf_token %}
-                        <textarea class="form-control bg-light mb-3" id="replyText{{review.id}}" name="text" rows="5" minlength="10" maxlength="5000" placeholder="Comment your thoughts..."></textarea>
+                        <textarea class="form-control bg-light mb-3" id="replyText{{review.id}}" name="text" minlength="10" maxlength="5000" placeholder="Comment your thoughts..."
+                                  oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' onfocus="this.rows=8;" onfocusout="this.rows=2;"></textarea>
                         <div align="right">
                             <button type="submit" class="btn btn-primary mx-auto" id="replyBtn{{review.id}}">Reply!</button>
                         </div>
