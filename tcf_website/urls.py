@@ -30,6 +30,8 @@ urlpatterns = [
     path('reviews', views.reviews, name='reviews'),
     path('reviews/<int:review_id>/upvote', views.upvote),
     path('reviews/<int:review_id>/downvote', views.downvote),
+    path('reviews/<int:reply_id>/upvote', views.review.reply_upvote),
+    path('reviews/<int:reply_id>/downvote', views.review.reply_downvote),
     path('reviews/check_duplicate', views.review.check_duplicate),
     path('profile', views.profile, name='profile'),
     path('search', views.search, name='search'),

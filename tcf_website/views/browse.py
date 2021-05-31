@@ -20,7 +20,6 @@ from ..models import (
     Semester,
     Instructor,
     Review,
-    Reply,
     CourseInstructorGrade)
 
 
@@ -153,11 +152,6 @@ def course_instructor(request, course_id, instructor_id):
     reviews = Review.display_reviews(course_id, instructor_id, request.user)
     dept = course.subdepartment.department
 
-    # Get list of replies for each Review
-    replies = []
-    for r in reviews:
-        replies.append(Reply.objects.filter(review=r))
-
     course_url = reverse('course',
                          args=[course.subdepartment.mnemonic, course.number])
     # Navigation breadcrumbs
@@ -221,7 +215,6 @@ def course_instructor(request, course_id, instructor_id):
                       'semester_last_taught': section_last_taught.semester,
                       'num_reviews': num_reviews,
                       'reviews': reviews,
-                      'replies': replies,
                       'breadcrumbs': breadcrumbs,
                       'data': json.dumps(data),
                   })

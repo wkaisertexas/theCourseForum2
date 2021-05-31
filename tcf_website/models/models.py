@@ -745,6 +745,65 @@ class Reply(models.Model):
     # Review modified date. Required.
     modified = models.DateTimeField(auto_now=True)
 
+    def count_votes(self):
+        """Sum votes for review."""
+        return self.replyvote_set.aggregate(
+            upvotes=Coalesce(models.Sum('value', filter=models.Q(value=1)), 0),
+            downvotes=Coalesce(Abs(models.Sum('value', filter=models.Q(value=-1))), 0),
+        )
+
+    def upvote(self, user):
+        """Create an upvote."""
+
+        # Check if already upvoted.
+        upvoted = ReplyVote.objects.filter(
+            user=user,
+            reply=self,
+            value=1,
+        ).exists()
+
+        # Delete all prior votes.
+        ReplyVote.objects.filter(
+            user=user,
+            reply=self,
+        ).delete()
+
+        # Don't upvote again if previously upvoted.
+        if upvoted:
+            return
+
+        ReplyVote.objects.create(
+            value=1,
+            user=user,
+            reply=self,
+        )
+
+    def downvote(self, user):
+        """Create a downvote."""
+
+        # Check if already downvoted.
+        downvoted = ReplyVote.objects.filter(
+            user=user,
+            reply=self,
+            value=-1,
+        ).exists()
+
+        # Delete all prior votes.
+        ReplyVote.objects.filter(
+            user=user,
+            reply=self,
+        ).delete()
+
+        # Don't downvote again if previously downvoted.
+        if downvoted:
+            return
+
+        ReplyVote.objects.create(
+            value=-1,
+            user=user,
+            reply=self,
+        )
+
     class Meta:
         ordering = ('created',)
 
@@ -775,5 +834,34 @@ class Vote(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'review'],
                 name='unique vote per user and review',
+            )
+        ]
+
+class ReplyVote(models.Model):
+    """Vote model.
+
+    Belongs to a User.
+    Belongs to a Reply.
+    """
+    # Vote value. Required.
+    value = models.IntegerField(
+        validators=[MinValueValidator(-1), MaxValueValidator(1)])
+    # Vote user foreign key. Required.
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # Vote review foreign key. Required.
+    reply = models.ForeignKey(Reply, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Vote of value {self.value} for {self.reply} by {self.user}"
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['reply']),
+        ]
+
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'reply'],
+                name='unique vote per user and reply',
             )
         ]
