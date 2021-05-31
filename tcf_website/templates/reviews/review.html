@@ -76,6 +76,8 @@
                           </a>
                           <span class="downvoteCount">{{ review.count_votes.downvotes }}</span>
                       </div>
+                        {% if profile %}
+                        {% else %}
                       <div>
                           <a class="btn btn-primary" data-toggle="collapse" href="#repliesCollapse{{review.id}}" role="button"
                              aria-expanded="false" aria-controls="#repliesCollapse{{review.id}}">
@@ -83,6 +85,7 @@
                               <span>{{ review.reply_set.all|length }} {% if review.reply_set.all|length == 1 %} Reply {% else %} Replies {% endif %}</span>
                           </a>
                       </div>
+                        {% endif %}
                     </div>
 
                     <!-- Review Ratings -->
@@ -116,6 +119,8 @@
             </div>
         </div>
     </div>
+    {% if profile %}
+    {% else %}
     <div class="collapse" id="repliesCollapse{{review.id}}">
         <div class="card-body text-left px-md-5">
             <div class="row">
@@ -135,5 +140,6 @@
             {% include "reviews/reply.html" with reply=rep reply_count=forloop.counter %}
         {% endfor %}
     </div>
+    {% endif %}
 </div>
 

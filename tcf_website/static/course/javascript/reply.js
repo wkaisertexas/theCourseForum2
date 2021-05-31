@@ -35,7 +35,8 @@ $(function () {
             async: false,
             success: function (check) {
                 if(check.reply) {
-                    // Update review to show new reply without refreshing page
+                    // Update review to show new reply without refreshing page and disable submit buttons so user
+                    // can't spam click
 
                     // Only update replies collapse if reply is being edited since total number of replies is unchanged
                     if(checkForm.includes("edit")) {
@@ -44,6 +45,7 @@ $(function () {
                         editReply($(this).attr('name').substring(17));
                     } else {
                         // Refresh review content and toggle back open the reply collapse
+                        $("#replyBtn" + reviewID).prop("disabled", true);
                         $("#review" + reviewID).load(location.href + " #review" + reviewID + ">*", function() {
                             $("#repliesCollapse" + reviewID).toggle();
                         });
