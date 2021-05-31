@@ -40,10 +40,13 @@ $(function () {
                     // Only update replies collapse if reply is being edited since total number of replies is unchanged
                     if(checkForm.includes("edit")) {
                         $("#repliesCollapse" + reviewID).load(location.href + " #repliesCollapse" + reviewID + ">*", "");
-                        // After submitting edit reply form, go back to original <p> tag for reply
+                        // After submitting edit reply form, go back to original <p> tag for reply and hide save button
                         editReply($(this).attr('name').substring(17));
                     } else {
-                        $("#review" + reviewID).load(location.href + " #review" + reviewID + ">*", "");
+                        // Refresh review content and toggle back open the reply collapse
+                        $("#review" + reviewID).load(location.href + " #review" + reviewID + ">*", function() {
+                            $("#repliesCollapse" + reviewID).toggle();
+                        });
                     }
                 }
             }
