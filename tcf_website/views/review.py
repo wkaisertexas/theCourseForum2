@@ -48,7 +48,7 @@ class ReplyForm(forms.ModelForm):
 
 @login_required
 def upvote(request, review_id):
-    """Upvote a review."""
+    """Upvote a view."""
     if request.method == 'POST':
         review = Review.objects.get(pk=review_id)
         review.upvote(request.user)
@@ -58,29 +58,10 @@ def upvote(request, review_id):
 
 @login_required
 def downvote(request, review_id):
-    """Downvote a review."""
+    """Downvote a view."""
     if request.method == 'POST':
         review = Review.objects.get(pk=review_id)
         review.downvote(request.user)
-        return JsonResponse({'ok': True})
-    return JsonResponse({'ok': False})
-
-@login_required
-def reply_upvote(request, reply_id):
-    """Upvote a reply."""
-    if request.method == 'POST':
-        reply = Reply.objects.get(pk=reply_id)
-        reply.upvote(request.user)
-        return JsonResponse({'ok': True})
-    return JsonResponse({'ok': False})
-
-
-@login_required
-def reply_downvote(request, reply_id):
-    """Downvote a reply."""
-    if request.method == 'POST':
-        reply = Reply.objects.get(pk=reply_id)
-        reply.downvote(request.user)
         return JsonResponse({'ok': True})
     return JsonResponse({'ok': False})
 

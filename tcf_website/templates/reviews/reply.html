@@ -42,21 +42,21 @@
                     <!-- Reply upvote/downvote container -->
                     <div class="vote-container col-sm-4 d-flex align-items-end text-center text-muted flex-wrap">
                       <!-- Hidden HTML tag to sort reviews by helpfulness (net upvotes)-->
-                      <span id="vote-count" hidden>{{ reply.sum_votes }}</span>
+                      <span id="vote-count" hidden>{{ review.sum_votes }}</span>
                       <div class="mr-3 mr-sm-4">
                           <!--Voting logic is implemented in the <script> tag of reviews.html-->
-                          <a id="upvote{{reply.id}}" href="#loginModal" data-toggle="modal"
-                             class="upvote {% if reply.user_vote == 1 %}active{% endif %}">
+                          <a id="upvote{{review.id}}" href="#loginModal" data-toggle="modal"
+                             class="upvote {% if review.user_vote == 1 %}active{% endif %}">
                               <i class="fa fa-thumbs-up"></i>
                           </a>
-                          <span class="upvoteCount">{{ reply.count_votes.upvotes }}</span>
+                          <span class="upvoteCount">{{ review.count_votes.upvotes }}</span>
                       </div>
                       <div class="mr-3 mr-sm-4">
-                          <a id="downvote{{reply.id}}" href="#loginModal" data-toggle="modal"
-                             class="downvote {% if reply.user_vote == -1 %}active{% endif %}">
+                          <a id="downvote{{review.id}}" href="#loginModal" data-toggle="modal"
+                             class="downvote {% if review.user_vote == -1 %}active{% endif %}">
                               <i class="fa fa-thumbs-down"></i>
                           </a>
-                          <span class="downvoteCount">{{ reply.count_votes.downvotes }}</span>
+                          <span class="downvoteCount">{{ review.count_votes.downvotes }}</span>
                       </div>
                     </div>
                     {% if user == reply.user %}
