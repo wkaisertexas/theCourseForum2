@@ -40,7 +40,9 @@ $(function () {
 
                     // Only update replies collapse if reply is being edited since total number of replies is unchanged
                     if(checkForm.includes("edit")) {
-                        $("#repliesCollapse" + reviewID).load(location.href + " #repliesCollapse" + reviewID + ">*", "");
+                        $("#repliesCollapse" + reviewID).load(location.href + " #repliesCollapse" + reviewID + ">*", function() {
+                            $('[data-toggle="tooltip"]').tooltip()
+                        });
                         // After submitting edit reply form, go back to original <p> tag for reply and hide save button
                         editReply($(this).attr('name').substring(17));
                     } else {
@@ -48,6 +50,7 @@ $(function () {
                         $("#replyBtn" + reviewID).prop("disabled", true);
                         $("#review" + reviewID).load(location.href + " #review" + reviewID + ">*", function() {
                             $("#repliesCollapse" + reviewID).toggle();
+                            $('[data-toggle="tooltip"]').tooltip();
                         });
                     }
                 }
