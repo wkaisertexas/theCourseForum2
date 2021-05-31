@@ -10,7 +10,8 @@
                 <div class="reply-header">
                   <div class="d-flex justify-content-between">
                     <h6 id="order">#{{reply_count}}</h6>
-                    <h6 id="date" class="text-muted">Updated {{ reply.modified|date:"n/d/y" }}</h6>
+                    <h10 id="date" class="text-muted">{% if reply.created|date:"n/d/y" != reply.modified|date:"n/d/y" %} Edited {{ reply.modified|date:"n/d/y" }} • {% endif %}
+                        {{ reply.created|date:"n/d/y" }} </h10>
                   </div>
                 </div>
 
@@ -26,7 +27,7 @@
                           <!-- Hide save button until user clicks edit reply -->
                         <div align="right" id="saveReplyEdit{{reply.id}}" style="display: none">
                             <br>
-                            <button type="submit" class="btn btn-primary mx-auto">Save</button>
+                            <button type="submit" class="btn btn-primary mx-auto" id="saveReplyEditBtn{{reply.id}}">Save</button>
                         </div>
                       </form>
                   </div>
