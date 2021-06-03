@@ -21,17 +21,17 @@
   padding: 20px 30px;
 }
 
-.review .upvote, .review .downvote {
+.reply .replyUpvote, .reply .replyDownvote {
     font-size: 1.3rem;
     color: #aaa;
     cursor: pointer;
 }
 
-.review .upvote.active, .review .upvote:hover {
+.reply .replyUpvote.active, .reply .replyUpvote:hover {
     color: dodgerblue;
 }
 
-.review .downvote.active, .review .downvote:hover {
+.reply .replyDownvote.active, .reply .replyDownvote:hover {
     color: rgb(215, 86, 38);
 }
 

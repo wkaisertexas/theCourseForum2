@@ -80,8 +80,8 @@
                         {% else %}
                       <div>
                           <a class="btn btn-primary" data-toggle="collapse" href="#repliesCollapse{{review.id}}" role="button"
-                             aria-expanded="false" aria-controls="#repliesCollapse{{review.id}}">
-                              <i class="fas fa-comment-alt"></i>
+                             aria-expanded="false" aria-controls="#repliesCollapse{{review.id}}" style="height:35px;width:140px">
+                              <i class="fas fa-comment-alt" style="margin-right:8px"></i>
                               <span>{{ review.reply_set.all|length }} {% if review.reply_set.all|length == 1 %} Reply {% else %} Replies {% endif %}</span>
                           </a>
                       </div>
@@ -130,7 +130,7 @@
                         <textarea class="form-control bg-light mb-3" id="replyText{{review.id}}" name="text" minlength="10" maxlength="5000" placeholder="Comment your thoughts..."
                                   oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' onfocus="this.rows=8;" onfocusout="this.rows=2;"></textarea>
                         <div align="right">
-                            <button type="submit" class="btn btn-primary mx-auto" id="replyBtn{{review.id}}">Reply!</button>
+                            <button type="submit" class="btn btn-primary mx-auto" id="replyBtn{{review.id}}">Post</button>
                         </div>
                     </form>
                 </div>
