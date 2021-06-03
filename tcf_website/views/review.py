@@ -45,12 +45,6 @@ class ReplyForm(forms.ModelForm):
         model = Reply
         fields = ['text']
 
-    def save(self, commit=True):
-        # Only save and update if the reply text actually changed
-        if 'text' in self.changed_data:
-            super(ReplyForm, self).save(commit)
-        super(ReplyForm, self).save(False)
-
 
 @login_required
 def upvote(request, review_id):
@@ -248,7 +242,9 @@ def edit_reply(request, reply_id):
     if request.method == 'POST':
         form = ReplyForm(request.POST, instance=reply)
         if form.is_valid():
-            form.save()
+            # Only save and update if the reply text actually changed
+            if form.has_changed():
+                form.save()
             return JsonResponse({'reply': True})
 
     form = ReplyForm(instance=reply)

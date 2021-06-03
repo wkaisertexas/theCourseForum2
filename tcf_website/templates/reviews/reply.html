@@ -22,9 +22,10 @@
                      <!-- Full reply text -->
                       <form id="editReplyForm{{review.id}}" name="editReplyFormName{{reply.id}}" action="{% url 'edit_reply' reply_id=reply.id %}" method="POST">
                       {% csrf_token %}
-                          <!-- Most of the attributes in this p tag are for when the text becomes editable in a textarea form -->
-                        <p class="reply-text-full" id="editReplyField{{reply.id}}" name="text" minlength="10" maxlength="5000"
-                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' onfocus='this.style.height = this.scrollHeight + "px"'>{{ reply.text }}</p>
+                          <!-- Most of the attributes in this div tag are for when the text becomes editable in a textarea form -->
+                        <div class="reply-text-full" id="editReplyField{{reply.id}}" name="text" minlength="10" maxlength="5000"
+                        oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"'
+                             onfocus='this.style.height = this.scrollHeight + "px"'>{{ reply.text|linebreaks }}</div>
                           <!-- Hide save button until user clicks edit reply -->
                         <div align="right" id="saveReplyEdit{{reply.id}}" style="display: none">
                             <br>

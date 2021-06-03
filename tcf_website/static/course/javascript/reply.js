@@ -78,9 +78,9 @@ function showEditReply(reply_id) {
     }
 
     // form-control so that user can edit their reply
-    replacement.className = "form-control";
-    // move text from p to new text area
-    replacement.innerHTML = original.innerHTML;
+    replacement.className = "reply-text-full form-control";
+    // move text from div to new text area
+    replacement.textContent = original.textContent;
 
     // Swap to textarea form so that user can edit their reply
     original.parentNode.replaceChild(replacement, original);
@@ -94,7 +94,7 @@ function editReply(reply_id) {
 
     var original = document.getElementById('editReplyField' + reply_id);
     // Create a replacement tag
-    var replacement = document.createElement('p');
+    var replacement = document.createElement('div');
 
     // Grab all of the original's attributes, and pass them to the replacement
     for(var i = 0, l = original.attributes.length; i < l; ++i){
@@ -105,10 +105,10 @@ function editReply(reply_id) {
     }
 
     // Take off form-control classname
-    replacement.className = "";
-    replacement.innerHTML = original.innerHTML;
+    replacement.className = "reply-text-full";
+    replacement.textContent = original.textContent;
 
-    // Swap back to p tag for normal reply card
+    // Swap back to div tag for normal reply card
     original.parentNode.replaceChild(replacement, original);
 }
 /*
