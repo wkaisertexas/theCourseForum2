@@ -78,7 +78,7 @@ function showEditReply(reply_id) {
     }
 
     // form-control so that user can edit their reply
-    replacement.className = "form-control"
+    replacement.className = "form-control";
     // move text from p to new text area
     replacement.innerHTML = original.innerHTML;
 
@@ -105,7 +105,7 @@ function editReply(reply_id) {
     }
 
     // Take off form-control classname
-    replacement.className = ""
+    replacement.className = "";
     replacement.innerHTML = original.innerHTML;
 
     // Swap back to p tag for normal reply card

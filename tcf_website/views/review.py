@@ -45,6 +45,12 @@ class ReplyForm(forms.ModelForm):
         model = Reply
         fields = ['text']
 
+    def save(self, commit=True):
+        # Only save and update if the reply text actually changed
+        if 'text' in self.changed_data:
+            super(ReplyForm, self).save(commit)
+        super(ReplyForm, self).save(False)
+
 
 @login_required
 def upvote(request, review_id):
@@ -68,7 +74,7 @@ def downvote(request, reply_id):
 
 @login_required
 def reply_upvote(request, reply_id):
-    """Upvote a view."""
+    """Upvote a reply."""
     if request.method == 'POST':
         reply = Reply.objects.get(pk=reply_id)
         reply.upvote(request.user)
@@ -78,7 +84,7 @@ def reply_upvote(request, reply_id):
 
 @login_required
 def reply_downvote(request, review_id):
-    """Downvote a view."""
+    """Downvote a reply."""
     if request.method == 'POST':
         review = Review.objects.get(pk=review_id)
         review.downvote(request.user)
@@ -242,9 +248,7 @@ def edit_reply(request, reply_id):
     if request.method == 'POST':
         form = ReplyForm(request.POST, instance=reply)
         if form.is_valid():
-            # Only save and update if the reply actually changed
-            if form.cleaned_data['text'] != reply.text:
-                form.save()
+            form.save()
             return JsonResponse({'reply': True})
 
     form = ReplyForm(instance=reply)
