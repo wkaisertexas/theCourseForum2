@@ -1,7 +1,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'reviews/reply.css' %}" />
 
-<div id="reply{{reply.id}}">
+<div id="reply{{reply.id}}" class="reply">
     <div class="card-body text-left">
         <div class="row">
             <!-- Reply Main Content -->
@@ -22,6 +22,7 @@
                      <!-- Full reply text -->
                       <form id="editReplyForm{{review.id}}" name="editReplyFormName{{reply.id}}" action="{% url 'edit_reply' reply_id=reply.id %}" method="POST">
                       {% csrf_token %}
+                          <!-- Most of the attributes in this p tag are for when the text becomes editable in a textarea form -->
                         <p class="reply-text-full" id="editReplyField{{reply.id}}" name="text" minlength="10" maxlength="5000"
                         oninput='this.style.height = "";this.style.height = this.scrollHeight + "px"' onfocus='this.style.height = this.scrollHeight + "px"'>{{ reply.text }}</p>
                           <!-- Hide save button until user clicks edit reply -->
@@ -44,21 +45,19 @@
                     <!-- Reply upvote/downvote container -->
                     <div class="vote-container col-sm-4 d-flex align-items-end text-center text-muted flex-wrap">
                       <!-- Hidden HTML tag to sort reviews by helpfulness (net upvotes)-->
-                      <span id="vote-count" hidden>{{ review.sum_votes }}</span>
+                      <span id="vote-count{{reply.id}}" hidden>{{ reply.sum_votes }}</span>
                       <div class="mr-3 mr-sm-4">
                           <!--Voting logic is implemented in the <script> tag of reviews.html-->
-                          <a id="upvote{{review.id}}" href="#loginModal" data-toggle="modal"
-                             class="upvote {% if review.user_vote == 1 %}active{% endif %}">
+                          <a id="replyUpvote{{reply.id}}" href="#loginModal" data-toggle="modal"
+                             class="replyUpvote {% if reply.user_votes == 1 %}active{% endif %}">
                               <i class="fa fa-thumbs-up"></i>
                           </a>
-                          <span class="upvoteCount">{{ review.count_votes.upvotes }}</span>
                       </div>
                       <div class="mr-3 mr-sm-4">
-                          <a id="downvote{{review.id}}" href="#loginModal" data-toggle="modal"
-                             class="downvote {% if review.user_vote == -1 %}active{% endif %}">
+                          <a id="replyDownvote{{reply.id}}" href="#loginModal" data-toggle="modal"
+                             class="replyDownvote {% if reply.user_votes == -1 %}active{% endif %}">
                               <i class="fa fa-thumbs-down"></i>
                           </a>
-                          <span class="downvoteCount">{{ review.count_votes.downvotes }}</span>
                       </div>
                     </div>
                     {% if user == reply.user %}

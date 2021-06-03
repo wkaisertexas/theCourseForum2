@@ -265,4 +265,22 @@
             {% endif %}
         });
     </script>
+
+    <script type="module">
+        import { handleReplyVote } from "{% static 'course/javascript/reply.js' %}";
+        {% if user.is_authenticated %}
+            $('.replyUpvote').each(function(i, obj) {
+                $(this).click(()=>{
+                    handleReplyVote(obj.id.substring(11), true);
+                });
+                $(this).removeAttr('href');
+            });
+            $('.replyDownvote').each(function(i, obj) {
+                $(this).click(()=>{
+                    handleReplyVote(obj.id.substring(13), false);
+                });
+                $(this).removeAttr('href');
+            });
+        {% endif %}
+    </script>
 {% endblock %}

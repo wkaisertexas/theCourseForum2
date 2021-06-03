@@ -57,7 +57,27 @@ def upvote(request, review_id):
 
 
 @login_required
-def downvote(request, review_id):
+def downvote(request, reply_id):
+    """Downvote a view."""
+    if request.method == 'POST':
+        reply = Reply.objects.get(pk=reply_id)
+        reply.downvote(request.user)
+        return JsonResponse({'ok': True})
+    return JsonResponse({'ok': False})
+
+
+@login_required
+def reply_upvote(request, reply_id):
+    """Upvote a view."""
+    if request.method == 'POST':
+        reply = Reply.objects.get(pk=reply_id)
+        reply.upvote(request.user)
+        return JsonResponse({'ok': True})
+    return JsonResponse({'ok': False})
+
+
+@login_required
+def reply_downvote(request, review_id):
     """Downvote a view."""
     if request.method == 'POST':
         review = Review.objects.get(pk=review_id)
@@ -222,7 +242,9 @@ def edit_reply(request, reply_id):
     if request.method == 'POST':
         form = ReplyForm(request.POST, instance=reply)
         if form.is_valid():
-            form.save()
+            # Only save and update if the reply actually changed
+            if form.cleaned_data['text'] != reply.text:
+                form.save()
             return JsonResponse({'reply': True})
 
     form = ReplyForm(instance=reply)
