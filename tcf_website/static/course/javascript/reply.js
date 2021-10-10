@@ -84,6 +84,11 @@ function showEditReply(reply_id) {
 
     // Swap to textarea form so that user can edit their reply
     original.parentNode.replaceChild(replacement, original);
+
+    // Put user's mouse inside of input and move cursor to end of text
+    replacement.focus();
+    const length = replacement.value.length;
+    replacement.setSelectionRange(length, length);
 }
 
 // Function to handle when user clicks save to a reply edit
@@ -111,11 +116,11 @@ function editReply(reply_id) {
     // Swap back to div tag for normal reply card
     original.parentNode.replaceChild(replacement, original);
 }
-/*
-For review upvote/downvote functionality
+
+//For reply upvote/downvote functionality
 function handleReplyVote(replyID, isUpvote) {
-    const upvoteCountElem = $(`#reply{replyID} .replyUpvoteCount`);
-    const downvoteCountElem = $(`#reply{replyID} .replyDownvoteCount`);
+    const upvoteCountElem = $(`#reply${replyID} .replyUpvoteCount`);
+    const downvoteCountElem = $(`#reply${replyID} .replyDownvoteCount`);
     const upvoteCount = parseInt(upvoteCountElem.text());
     const downvoteCount = parseInt(downvoteCountElem.text());
 
@@ -126,9 +131,9 @@ function handleReplyVote(replyID, isUpvote) {
     let newDownvoteCount;
 
     if (isUpvote) {
-        elem = $(`#reply{replyID} .replyUpvote`);
-        otherElem = $(`#reply{replyID} .replyDownvote`);
-        endpoint = `/reviews/reply/${replyID}/upvote`;
+        elem = $(`#reply${replyID} .replyUpvote`);
+        otherElem = $(`#reply${replyID} .replyDownvote`);
+        endpoint = `/reply/${replyID}/upvote`;
 
         // If already upvoted, subtract 1.
         if (elem.hasClass("active")) {
@@ -142,9 +147,9 @@ function handleReplyVote(replyID, isUpvote) {
             newUpvoteCount = upvoteCount + 1;
         }
     } else {
-        elem = $(`#reply{replyID} .replyDownvote`);
-        otherElem = $(`#reply{replyID} .replyUpvote`);
-        endpoint = `/reviews/reply/${replyID}/downvote`;
+        elem = $(`#reply${replyID} .replyDownvote`);
+        otherElem = $(`#reply${replyID} .replyUpvote`);
+        endpoint = `/reply/${replyID}/downvote`;
 
         // If already downvoted, add 1.
         if (elem.hasClass("active")) {
@@ -158,7 +163,7 @@ function handleReplyVote(replyID, isUpvote) {
             newDownvoteCount = downvoteCount + 1;
         }
     }
-
+    
     // POST to upvote or downvote endpoint.
     fetch(endpoint, {
         method: "post",
@@ -177,8 +182,7 @@ function handleReplyVote(replyID, isUpvote) {
     }
 }
 
-export { handleReplyVote };
-*/
+module.exports = { handleReplyVote, showEditReply, editReply };
 
 // On browser window resize, refresh collapser threshold for each reply card
 $(".reply").each(function(i, reply) {

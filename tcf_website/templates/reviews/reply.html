@@ -1,6 +1,10 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'reviews/reply.css' %}" />
 
+<script type="module">
+    import { showEditReply, editReply } from "{% static 'reviews/reply.js' %}";
+</script>
+
 <div id="reply{{reply.id}}" class="reply">
     <div class="card-body text-left">
         <div class="row">
@@ -50,21 +54,23 @@
                       <div class="mr-3 mr-sm-4">
                           <!--Voting logic is implemented in the <script> tag of reviews.html-->
                           <a id="replyUpvote{{reply.id}}" href="#loginModal" data-toggle="modal"
-                             class="replyUpvote {% if reply.user_votes == 1 %}active{% endif %}">
+                             class="replyUpvote {% if reply.user == user and reply.user_votes.value__sum == 1 %}active{% endif %}">
                               <i class="fa fa-thumbs-up"></i>
                           </a>
+                          <span class="replyUpvoteCount">{{ reply.count_votes.upvotes }}</span>
                       </div>
                       <div class="mr-3 mr-sm-4">
                           <a id="replyDownvote{{reply.id}}" href="#loginModal" data-toggle="modal"
-                             class="replyDownvote {% if reply.user_votes == -1 %}active{% endif %}">
+                             class="replyDownvote {% if reply.user == user and reply.user_votes.value__sum == -1 %}active{% endif %}">
                               <i class="fa fa-thumbs-down"></i>
                           </a>
+                          <span class="replyDownvoteCount">{{ reply.count_votes.downvotes }}</span>
                       </div>
                     </div>
                     {% if user == reply.user %}
                     <div class="reply-ratings col-sm-8 d-flex align-items-end justify-content-end text-center text-muted flex-wrap mb-2">
                         <div class="reply-actions d-inline-flex">
-                          <a class="reply-edit h5 px-2 text-tcf-blue" role="button" id="editReply{{reply.id}}" onclick="showEditReply({{reply.id}});">
+                          <a class="reply-edit h5 px-2 text-tcf-blue" type="button" id="editReply{{reply.id}}" onclick="showEditReply({{reply.id}});">
                               <i class="fas fa-pencil-alt" data-toggle="tooltip" data-placement="bottom" title="Edit Reply"></i>
                           </a>
                           <a class="reply-delete h5 pl-2 text-danger" type="button"

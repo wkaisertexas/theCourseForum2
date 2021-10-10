@@ -57,11 +57,11 @@ def upvote(request, review_id):
 
 
 @login_required
-def downvote(request, reply_id):
-    """Downvote a view."""
+def downvote(request, review_id):
+    """Downvote a review."""
     if request.method == 'POST':
-        reply = Reply.objects.get(pk=reply_id)
-        reply.downvote(request.user)
+        review = Review.objects.get(pk=review_id)
+        review.downvote(request.user)
         return JsonResponse({'ok': True})
     return JsonResponse({'ok': False})
 
@@ -77,11 +77,11 @@ def reply_upvote(request, reply_id):
 
 
 @login_required
-def reply_downvote(request, review_id):
+def reply_downvote(request, reply_id):
     """Downvote a reply."""
     if request.method == 'POST':
-        review = Review.objects.get(pk=review_id)
-        review.downvote(request.user)
+        reply = Reply.objects.get(pk=reply_id)
+        reply.downvote(request.user)
         return JsonResponse({'ok': True})
     return JsonResponse({'ok': False})
 

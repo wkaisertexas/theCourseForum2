@@ -746,7 +746,7 @@ class Reply(models.Model):
     modified = models.DateTimeField(auto_now=True)
 
     def count_votes(self):
-        return self.replyvote_set.aggregate(
+        return ReplyVote.objects.filter(reply=self).aggregate(
             upvotes=Coalesce(models.Sum('value', filter=models.Q(value=1)), 0),
             downvotes=Coalesce(Abs(models.Sum('value', filter=models.Q(value=-1))), 0),
         )
@@ -802,6 +802,12 @@ class Reply(models.Model):
             user=user,
             reply=self,
         )
+
+    @property
+    def user_votes(self):
+        """Gets the votes associated with this reply and its user"""
+        user_vote = ReplyVote.objects.filter(reply=self).aggregate(models.Sum('value'))
+        return user_vote
 
     def __str__(self):
         return f"Reply by {self.user} to {self.review}"
