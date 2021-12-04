@@ -155,8 +155,8 @@ def course_instructor(request, course_id, instructor_id):
 
     # Get list of replies for each Review
     replies = []
-    for r in reviews:
-        replies.append(Reply.objects.filter(review=r))
+    for review in reviews:
+        replies.append(Reply.objects.filter(review=review))
 
     course_url = reverse('course',
                          args=[course.subdepartment.mnemonic, course.number])

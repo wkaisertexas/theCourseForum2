@@ -2,50 +2,50 @@
     To handle reply form submission - add new reply, delete reply, or edit reply without refreshign page
 */
 
-$(function () {
+$(function() {
     // Don't cache so that content actually updates
-    $.ajaxSetup ({
+    $.ajaxSetup({
         cache: false
     });
 
     // Handle reply form submission
-    $(document).on('submit', 'form', function(e) {
+    $(document).on("submit", "form", function(e) {
         e.preventDefault();
 
         // Review ID location in ID varies based on which form is used
         // Have delete form in delete_reply_modal.html, new reply form in review.html, and edit reply form in reply.html
-        var checkForm = $(this).attr('id');
+        var checkForm = $(this).attr("id");
         var reviewID = "";
 
         // Get review ID based on ID of reply form
         // Review ID used to update page
-        if(checkForm.includes("delete") || checkForm.includes("edit")) {
+        if (checkForm.includes("delete") || checkForm.includes("edit")) {
             // Review ID location in delete or edit reply form
-            reviewID = $(this).attr('id').substring(13);
+            reviewID = $(this).attr("id").substring(13);
         } else {
             // Review ID location in new reply form
-            reviewID = $(this).attr('id').substring(9);
+            reviewID = $(this).attr("id").substring(9);
         }
 
         // Submit form and update page without refreshing using AJAX
         $.ajax({
             type: "POST",
-            url: $(this).attr('action'),
+            url: $(this).attr("action"),
             data: $(this).serialize(),
             async: false,
-            success: function (check) {
-                if(check.reply) {
+            success: function(check) {
+                if (check.reply) {
                     // Update review to show new reply without refreshing page and disable submit buttons so user
                     // can't spam click
 
                     // Only update replies collapse if reply is being edited since total number of replies is unchanged
-                    if(checkForm.includes("edit")) {
+                    if (checkForm.includes("edit")) {
                         $("#repliesCollapse" + reviewID).load(location.href + " #repliesCollapse" + reviewID + ">*", function() {
                             // Necessary so that tooltips work again after .load()
-                            $('[data-toggle="tooltip"]').tooltip()
+                            $('[data-toggle="tooltip"]').tooltip();
                         });
                         // After submitting edit reply form, go back to original <p> tag for reply and hide save button
-                        editReply($(this).attr('name').substring(17));
+                        editReply($(this).attr("name").substring(17));
                     } else {
                         // Refresh review content and toggle back open the reply collapse
                         $("#replyBtn" + reviewID).prop("disabled", true);
@@ -61,16 +61,16 @@ $(function () {
 });
 
 // Function that shows save button and makes reply editable when user tries to edit their reply
-function showEditReply(reply_id) {
-    $("#saveReplyEdit" + reply_id).css("display", "block");
+function showEditReply(replyID) {
+    $("#saveReplyEdit" + replyID).css("display", "block");
 
     // Grab original tag
-    var original = document.getElementById('editReplyField' + reply_id);
+    var original = document.getElementById("editReplyField" + replyID);
     // Create a replacement tag
-    var replacement = document.createElement('textarea');
+    var replacement = document.createElement("textarea");
 
     // Grab all of the original's attributes, and pass them to the replacement
-    for(var i = 0, l = original.attributes.length; i < l; ++i){
+    for (var i = 0, l = original.attributes.length; i < l; ++i) {
         var nodeName = original.attributes.item(i).nodeName;
         var nodeValue = original.attributes.item(i).nodeValue;
 
@@ -93,16 +93,16 @@ function showEditReply(reply_id) {
 
 // Function to handle when user clicks save to a reply edit
 // Revert back to original reply card
-function editReply(reply_id) {
+function editReply(replyID) {
     // Hide save button
-    $("#saveReplyEdit" + reply_id).css("display", "none");
+    $("#saveReplyEdit" + replyID).css("display", "none");
 
-    var original = document.getElementById('editReplyField' + reply_id);
+    var original = document.getElementById("editReplyField" + replyID);
     // Create a replacement tag
-    var replacement = document.createElement('div');
+    var replacement = document.createElement("div");
 
     // Grab all of the original's attributes, and pass them to the replacement
-    for(var i = 0, l = original.attributes.length; i < l; ++i){
+    for (var i = 0, l = original.attributes.length; i < l; ++i) {
         var nodeName = original.attributes.item(i).nodeName;
         var nodeValue = original.attributes.item(i).nodeValue;
 
@@ -117,7 +117,7 @@ function editReply(reply_id) {
     original.parentNode.replaceChild(replacement, original);
 }
 
-//For reply upvote/downvote functionality
+// For reply upvote/downvote functionality
 function handleReplyVote(replyID, isUpvote) {
     const upvoteCountElem = $(`#reply${replyID} .replyUpvoteCount`);
     const downvoteCountElem = $(`#reply${replyID} .replyDownvoteCount`);
@@ -163,7 +163,7 @@ function handleReplyVote(replyID, isUpvote) {
             newDownvoteCount = downvoteCount + 1;
         }
     }
-    
+
     // POST to upvote or downvote endpoint.
     fetch(endpoint, {
         method: "post",

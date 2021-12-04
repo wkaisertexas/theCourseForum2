@@ -33,6 +33,7 @@ urlpatterns = [
     path('reply/<int:reply_id>/edit>', views.review.edit_reply, name="edit_reply"),
     path('reply/<int:reply_id>/upvote', views.review.reply_upvote),
     path('reply/<int:reply_id>/downvote', views.review.reply_downvote),
+    path('reviews/check_zero_hours_per_week', views.review.check_zero_hours_per_week),
     path('profile', views.profile, name='profile'),
     path('search', views.search, name='search'),
 

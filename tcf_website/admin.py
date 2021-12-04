@@ -1,4 +1,4 @@
-# pylint: disable=missing-class-docstring, wildcard-import
+# pylint: disable=missing-class-docstring, wildcard-import, unused-wildcard-import
 
 """TCF Django Admin."""
 
@@ -65,6 +65,7 @@ class CourseGradeAdmin(admin.ModelAdmin):
 class CourseInstructorGradeAdmin(admin.ModelAdmin):
     ordering = ['last_name', 'first_name']
     search_fields = ['first_name', 'last_name']
+
 
 class ReplyAdmin(admin.ModelAdmin):
     ordering = ['modified']
