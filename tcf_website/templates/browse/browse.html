@@ -8,9 +8,11 @@
 {% endblock %}
 
 {% block content %}
-    {% comment %} <div class="container">
+    {% comment %}
+    <div class="container">
         {% include "../common/notification.html" %}
-    </div> {% endcomment %}
+    </div>
+    {% endcomment %}
     <div class="browse container">
         {% comment %}
         {% include "../common/review-drive-banner.html" %}
@@ -23,7 +25,7 @@
         <div class="schools text-left">
 
         {% include "browse/school.html" with school_name=CLAS.name departments=CLAS.department_set.all %}
-        
+
         {% include "browse/school.html" with school_name=SEAS.name departments=SEAS.department_set.all id="SEAS"%}
 
         {% include "browse/grouped_schools.html" with school_name="Other Schools at the University of Virginia" schools=other_schools misc=misc_school%}

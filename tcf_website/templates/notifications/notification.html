@@ -1,10 +1,11 @@
 {% load static %}
 
+{% block styles %}
+<link rel="stylesheet" href="{% static 'notifications/notifications.css' %}" />
+{% endblock %}
+
 <div class="my-reviews-header d-flex flex-sm-row flex-column mb-4">
     <h1 class="h2 mt-2 mb-0">My Notifications</h1>
-    <!--<a class="ml-sm-auto mt-2 btn bg-tcf-orange text-white" href="{% url 'mark_all_as_read' %}">
-      Mark All As Read
-    </a>-->
     <button class="ml-sm-auto mt-2 btn bg-tcf-orange text-white" onClick="readAll()">
       Mark All As Read
     </button>
@@ -13,67 +14,8 @@
 <div id="notifications">
 </div>
 
+{% block js %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript">
-  function getNotifs(){
-    $.ajax({
-       type: "GET",
-       url : "/api/notifications/?page_size=10",
-       dataType:"json",
-       success: function(data, status, xhr){
-         console.log(data.results);
-         var notifs = ''
-         data.results.forEach(n => {
-           notifs += '<div class="card mb-2" id="notifications">'
-           notifs +=  '<div style="padding-top: 2rem;" class="card-body text-left"><div style="display: inline-block; float: left">'
-           notifs += '<p>'+n.content+'</p>'
-           notifs += '<p style="font-size: 12px">'+n.created+'</p>'
-           notifs +=  '</div><div style="height = 100%">'
-           if(n.is_read){
-             notifs += '<button onClick="unread(' + n.id + ')" class="readButton" style="display: inline-block; float: right; height: 20px; width: 20px; border-color:var(--main-color); background-color: white; border-radius: 10px"></button>'
-           }
-           else{
-             notifs += '<button onClick="oneread(' + n.id + ')" class="readButton" style="display: inline-block; float: right; height: 20px; width: 20px; border-color:var(--main-color); background-color: var(--main-color); border-radius: 10px"></button>'
-           }
-           notifs += '<br /><br /></div></div></div>'
-         });
-         console.log(notifs)
-         $('#notifications').html(notifs);
-      }
-    });
-  }
-
-  $(document).ready(getNotifs());
-
-  function readAll(){
-    $.ajax({
-       type: "POST",
-       url : "/mark_all_as_read",
-       dataType:"html",
-       success: function(data, status, xhr){
-         getNotifs();
-      }
-    });
- }
- function unread(notif_id){
-   $.ajax({
-      type: "POST",
-      url : "/mark_one_as_unread/"+notif_id,
-      dataType:"html",
-      success: function(data, status, xhr){
-        getNotifs();
-     }
-   });
- }
-
- function oneread(notif_id){
-   $.ajax({
-      type: "POST",
-      url : "/mark_one_as_read/"+notif_id,
-      dataType:"html",
-      success: function(data, status, xhr){
-        getNotifs();
-     }
-   });
- }
-</script>
+<script type="text/javascript" src="{% static 'notifications/notifications.js' %}"></script>
+<script type="text/javascript">$(document).ready(getNotifs());</script>
+{% endblock %}

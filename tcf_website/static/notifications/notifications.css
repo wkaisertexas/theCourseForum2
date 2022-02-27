@@ -1,0 +1,15 @@
+.readButton {
+    float: right;
+    height: 20px;
+    width: 20px;
+    border-color:var(--main-color);
+    border-radius: 50%;
+}
+
+.readButton.read {
+    background-color: white;
+}
+
+.readButton.unread {
+    background-color: var(--main-color);
+}
