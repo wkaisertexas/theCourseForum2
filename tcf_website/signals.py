@@ -12,7 +12,10 @@ from .models import Notification, Vote
 def notify_upon_review_upvote(sender, instance: Vote, created: bool,
                               **kwargs):
     """A signal that sends a notification when a user's review is upvoted."""
-
+    # disallow notification for their own upvote
+    if instance.user == instance.review.user:
+        return
+    # disallow notification if downvote or insert unsuccessful
     if instance.value < 0 or not created:
         return
     mnemonic = instance.review.course.subdepartment.mnemonic

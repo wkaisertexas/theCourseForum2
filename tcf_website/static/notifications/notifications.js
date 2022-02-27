@@ -6,9 +6,9 @@ function getNotifs() {
         dataType: "json",
         success: function(data, status, xhr) {
             console.log(data.results);
-            let notifs;
-            data.results.forEach((n) => {
-                notifs = `
+            let notifs = "";
+            data.results.forEach(n => {
+                notifs += `
                 <div class="card mb-2" id="notifications">
                     <div style="padding-top: 2rem;" class="card-body text-left">
                         <div style="display: inline-block; float: left">
@@ -17,7 +17,7 @@ function getNotifs() {
                         </div>
                         <div style="height = 100%">
                             <button onClick="${n.is_read ? "unread" : "oneread"}(${n.id})"
-                                    class="readButton ${ n.is_read ? "read" : "unread"}"></button>
+                                    class="readButton ${n.is_read ? "read" : "unread"}"></button>
                             <br/>
                             <br/>
                         </div>
@@ -25,7 +25,6 @@ function getNotifs() {
                 </div>
                 `;
             });
-            console.log(notifs);
             $("#notifications").html(notifs);
         }
     });
