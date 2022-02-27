@@ -43,7 +43,7 @@ class ReviewForm(forms.ModelForm):
 
 @login_required
 def upvote(request, review_id):
-    """Upvote a view."""
+    """Upvote a review."""
     if request.method == 'POST':
         review = Review.objects.get(pk=review_id)
         review.upvote(request.user)
@@ -53,10 +53,20 @@ def upvote(request, review_id):
 
 @login_required
 def downvote(request, review_id):
-    """Downvote a view."""
+    """Downvote a review."""
     if request.method == 'POST':
         review = Review.objects.get(pk=review_id)
         review.downvote(request.user)
+        return JsonResponse({'ok': True})
+    return JsonResponse({'ok': False})
+
+
+@login_required
+def remove_vote(request, review_id):
+    """Remove vote from a review."""
+    if request.method == 'POST':
+        review = Review.objects.get(pk=review_id)
+        review.remove_vote(request.user)
         return JsonResponse({'ok': True})
     return JsonResponse({'ok': False})
 
