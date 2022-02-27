@@ -62,16 +62,6 @@ def downvote(request, review_id):
 
 
 @login_required
-def remove_vote(request, review_id):
-    """Remove vote from a review."""
-    if request.method == 'POST':
-        review = Review.objects.get(pk=review_id)
-        review.remove_vote(request.user)
-        return JsonResponse({'ok': True})
-    return JsonResponse({'ok': False})
-
-
-@login_required
 def new_review(request):
     """Review creation view."""
 

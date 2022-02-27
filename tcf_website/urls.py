@@ -27,7 +27,6 @@ urlpatterns = [
     path('reviews/', views.reviews, name='reviews'),
     path('reviews/<int:review_id>/upvote/', views.upvote),
     path('reviews/<int:review_id>/downvote/', views.downvote),
-    path('reviews/<int:review_id>/remove_vote/', views.remove_vote),
     path('reviews/check_duplicate/', views.review.check_duplicate),
     path('reviews/check_zero_hours_per_week/', views.review.check_zero_hours_per_week),
     path('profile/', views.profile, name='profile'),

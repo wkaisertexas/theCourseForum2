@@ -668,26 +668,21 @@ class Review(models.Model):
         """Create an upvote."""
         # Use a transaction to avoid race conditions, not handling IntegrityError
         with transaction.atomic():
-            if Vote.objects.filter(user=user, review=self, value=1).exists():
-                return
+            upvoted = Vote.objects.filter(user=user, review=self, value=1).exists()
             Vote.objects.filter(user=user, review=self).delete()
+            if upvoted:
+                return
             Vote.objects.create(user=user, review=self, value=1)
 
     def downvote(self, user):
         """Create a downvote."""
         # Use a transaction to avoid race conditions, not handling IntegrityError
         with transaction.atomic():
-            if Vote.objects.filter(user=user, review=self, value=-1).exists():
-                return
+            downvoted = Vote.objects.filter(user=user, review=self, value=-1).exists()
             Vote.objects.filter(user=user, review=self).delete()
+            if downvoted:
+                return
             Vote.objects.create(user=user, review=self, value=-1)
-
-    def remove_vote(self, user):
-        """Remove a vote."""
-        # Use a transaction to avoid race conditions, not handling IntegrityError
-        with transaction.atomic():
-            if Vote.objects.filter(user=user, review=self).exists():
-                Vote.objects.filter(user=user, review=self).delete()
 
     @staticmethod
     def display_reviews(course_id, instructor_id, user):

@@ -7,13 +7,12 @@ function handleVote(reviewID, isUpvote) {
     const selected = isUpvote ? 0 : 1;
     const voteCount = [parseInt(upvoteCountElem.text()), parseInt(downvoteCountElem.text())];
     const voteElem = [$(`#review${reviewID} .upvote`), $(`#review${reviewID} .downvote`)];
-    let endpoint = isUpvote ? `/reviews/${reviewID}/upvote/` : `/reviews/${reviewID}/downvote/`;
+    const endpoint = isUpvote ? `/reviews/${reviewID}/upvote/` : `/reviews/${reviewID}/downvote/`;
 
     // If clicked elem already selected, decrement count and remove vote
     if (voteElem[selected].hasClass("active")) {
         voteCount[selected]--;
         voteElem[selected].removeClass("active");
-        endpoint = `/reviews/${reviewID}/remove_vote/`;
     } else {
         // If clicked elem not already selected, increment count
         voteCount[selected]++;

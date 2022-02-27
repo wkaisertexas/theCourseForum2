@@ -162,32 +162,20 @@ class ModelReviewTests(TestCase):
         self.review1.upvote(self.user4)
         self.assertDictEqual(self.review1.count_votes(), {'upvotes': 3, 'downvotes': 1})
 
-    def test_upvote_already_upvoted(self):
-        """Test for upvote method verify with count_votes when the user already upvoted"""
-        self.review1.upvote(self.user4)
-        self.review1.upvote(self.user4)
-        self.assertDictEqual(self.review1.count_votes(), {'upvotes': 3, 'downvotes': 1})
-
     def test_downvote(self):
         """Test for downvote method verify with count_votes"""
         self.review1.downvote(self.user4)
         self.assertDictEqual(self.review1.count_votes(), {'upvotes': 2, 'downvotes': 2})
 
-    def test_upvote_already_downvoted(self):
-        """Test for downvote method verify with count_votes when the user already downvoted"""
-        self.review1.downvote(self.user4)
-        self.review1.downvote(self.user4)
-        self.assertDictEqual(self.review1.count_votes(), {'upvotes': 2, 'downvotes': 2})
-
     def test_remove_downvote(self):
         """Test for user who removes their downvote from a review"""
-        self.review1.remove_vote(self.user4)
-        self.assertDictEqual(self.review1.count_votes(), {'upvotes': 2, 'downvotes': 1})
+        self.review1.downvote(self.user3)
+        self.assertDictEqual(self.review1.count_votes(), {'upvotes': 2, 'downvotes': 0})
 
     def test_remove_upvote(self):
-        """Test for user who removes their downvote from a review"""
+        """Test for user who removes their upvote from a review"""
         self.review1.upvote(self.user4)
-        self.review1.remove_vote(self.user4)
+        self.review1.upvote(self.user4)
         self.assertDictEqual(self.review1.count_votes(), {'upvotes': 2, 'downvotes': 1})
 
     def test_double_vote(self):
