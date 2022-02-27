@@ -179,6 +179,17 @@ class ModelReviewTests(TestCase):
         self.review1.downvote(self.user4)
         self.assertDictEqual(self.review1.count_votes(), {'upvotes': 2, 'downvotes': 2})
 
+    def test_remove_downvote(self):
+        """Test for user who removes their downvote from a review"""
+        self.review1.remove_vote(self.user4)
+        self.assertDictEqual(self.review1.count_votes(), {'upvotes': 2, 'downvotes': 1})
+
+    def test_remove_upvote(self):
+        """Test for user who removes their downvote from a review"""
+        self.review1.upvote(self.user4)
+        self.review1.remove_vote(self.user4)
+        self.assertDictEqual(self.review1.count_votes(), {'upvotes': 2, 'downvotes': 1})
+
     def test_double_vote(self):
         """Test for voting twice on same review by same user using vote model"""
         self.assertRaises(IntegrityError, Vote.objects.create,
