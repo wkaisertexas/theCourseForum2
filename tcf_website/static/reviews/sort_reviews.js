@@ -39,8 +39,16 @@ function sortReviews(btnID) {
     }
 }
 
-sortReviews("votes-sort-btn");
-document.getElementById("votes-sort-btn").addEventListener("click", () => sortReviews("votes-sort-btn"), false);
-document.getElementById("recent-sort-btn").addEventListener("click", () => sortReviews("recent-sort-btn"), false);
-document.getElementById("highrating-sort-btn").addEventListener("click", () => sortReviews("highrating-sort-btn"), false);
-document.getElementById("lowrating-sort-btn").addEventListener("click", () => sortReviews("lowrating-sort-btn"), false);
+const buttons = [
+    "votes-sort-btn",
+    "recent-sort-btn",
+    "highrating-sort-btn",
+    "lowrating-sort-btn"
+];
+sortReviews(buttons[0]);
+for (const button of buttons) {
+    const btn = document.getElementById(button);
+    if (btn !== null) {
+        btn.addEventListener("click", () => sortReviews(button), false);
+    }
+}
