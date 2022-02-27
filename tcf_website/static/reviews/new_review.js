@@ -13,6 +13,17 @@ jQuery(function($) {
     clearDropdown("#instructor");
     clearDropdown("#semester");
 
+    // If coming from the sidebar, params.length = 0
+    // If coming from a course professor page, params.length > 0
+    const params = window.location.search;
+    let subdeptID, courseID, instructorID;
+    if (params.length > 0) {
+        const paramsArr = params.split("&");
+        subdeptID = parseInt(paramsArr[0].replace("?subdept_id=", ""));
+        courseID = parseInt(paramsArr[1].replace("course_id=", ""));
+        instructorID = parseInt(paramsArr[2].replace("instr_id=", ""));
+    }
+
     // Fetch all subdepartment data from API
     var subdeptEndpoint = "/api/subdepartments/";
     $.getJSON(subdeptEndpoint, function(data) {
@@ -25,8 +36,14 @@ jQuery(function($) {
         $.each(data, function(i, subdept) {
             $("<option />", {
                 val: subdept.id,
-                text: subdept.mnemonic + " | " + subdept.name
+                text: subdept.mnemonic + " | " + subdept.name,
+                // Check for autofill
+                selected: subdept.id === subdeptID
             }).appendTo("#subject");
+            // Trigger change on autofill
+            if (subdept.id === subdeptID) {
+                $("#subject").trigger("change");
+            }
         });
         return this;
     })
@@ -55,8 +72,14 @@ jQuery(function($) {
             $.each(data.results, function(i, course) {
                 $("<option />", {
                     val: course.id,
-                    text: course.number + " | " + course.title
+                    text: course.number + " | " + course.title,
+                    // Check for autofill
+                    selected: course.id === courseID
                 }).appendTo("#course");
+                // Trigger change on autofill
+                if (course.id === courseID) {
+                    $("#course").trigger("change");
+                }
             });
             return this;
         })
@@ -86,8 +109,14 @@ jQuery(function($) {
             $.each(data.results, function(i, instr) {
                 $("<option />", {
                     val: instr.id,
-                    text: instr.last_name + ", " + instr.first_name
+                    text: instr.last_name + ", " + instr.first_name,
+                    // Check for autofill
+                    selected: instr.id === instructorID
                 }).appendTo("#instructor");
+                // Trigger change on autofill
+                if (instr.id === instructorID) {
+                    $("#instructor").trigger("change");
+                }
             });
             return this;
         })
@@ -125,30 +154,32 @@ jQuery(function($) {
             });
     });
 
-    // Code for the progress bar
-    $("#reviewtext").on("keyup keypress keydown", function() { // Need all these different events so it works truly dynamically
+    // Review Progress Bar
+    $("#reviewtext").on("keyup keypress keydown", function() { // Need all these different events so it works dynamically
         // Used .trim() to remove leading and trailing spaces
         var review = $("#reviewtext").val().trim();
         var numberOfWords = countNumberOfWords(review);
+        var encouragedWordCount = 150;
 
-        // Set the width of the bar to the what percent of 300 words the current review is (Used an outer container's width to ensure it scales properly to mobile)
-        $("#review-progressbar").width(($("#review-form-div").width()) * (numberOfWords / 300));
+        // Set the width of the bar to the what percent of the encouraged word count the current review is (Used an outer container's width to ensure it scales properly to mobile)
+        $("#review-progressbar").width(($("#review-form-div").width()) * (numberOfWords / encouragedWordCount));
 
-        // String Form of the number of words out of 300
-        var numberOfWordsInMessage = "(" + numberOfWords.toString() + "/300)";
+        // String Form of the number of words out of the encouraged word count
+        var numberOfWordsInMessage = "(" + numberOfWords.toString() + "/" + encouragedWordCount.toString() + ")";
 
-        if (numberOfWords < 100) {
+        // Different progress bar colors and messages depending on the current word count
+        if (numberOfWords < encouragedWordCount / 3) {
             // Originally a django progress bar with danger for red so need to remove that to change colors
             $("#review-progressbar").removeClass("progress-bar bg-danger");
             $("#review-progressbar").css("background-color", "#FFB3BA");
-            $("#progressbar-message").html(numberOfWordsInMessage + " Your review is under 100 words. Aim for 300 or more!");
-        } else if (numberOfWords >= 100 && numberOfWords < 200) {
+            $("#progressbar-message").html(numberOfWordsInMessage + " Your review is under " + (encouragedWordCount / 3).toString() + " words. Aim for " + encouragedWordCount.toString() + " or more!");
+        } else if (numberOfWords >= encouragedWordCount / 3 && numberOfWords < 2 * encouragedWordCount / 3) {
             $("#review-progressbar").css("background-color", "#FFDAC1");
-            $("#progressbar-message").html(numberOfWordsInMessage + " Good job getting to 100 words, keep going!");
-        } else if (numberOfWords >= 200 && numberOfWords < 300) {
+            $("#progressbar-message").html(numberOfWordsInMessage + " Good job getting to " + (encouragedWordCount / 3).toString() + " words, keep going!");
+        } else if (numberOfWords >= 2 * encouragedWordCount / 3 && numberOfWords < encouragedWordCount) {
             $("#review-progressbar").css("background-color", "#FFF5BA");
-            $("#progressbar-message").html(numberOfWordsInMessage + " 200 words! You're so close to the 300 mark!");
-        } else if (numberOfWords >= 300) {
+            $("#progressbar-message").html(numberOfWordsInMessage + " " + (2 * encouragedWordCount / 3).toString() + " words! You're so close to the " + encouragedWordCount.toString() + " mark!");
+        } else if (numberOfWords >= encouragedWordCount) {
             $("#review-progressbar").css("background-color", "#B5EAD7");
             $("#progressbar-message").html(numberOfWordsInMessage + " Thank you for your in depth review. The tCF team and other users appreciate your effort!");
         }
