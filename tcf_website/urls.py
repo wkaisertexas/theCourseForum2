@@ -44,4 +44,6 @@ urlpatterns = [
     path('login/collect_extra_info/', views.collect_extra_info),
     path('accounts/login/', views.login),
     path('logout/', views.logout, name='logout'),
+    path('login/microsoft', views.auth.microsoft_login, name='microsoft_login'),
+    path('callback/', views.auth.callback, name='callback')
 ]

@@ -48,3 +48,31 @@
 .login-button:focus {
     outline: none;
 }
+
+/* Normal */
+.microsoft-login-button {
+    background: url('./microsoft-sign-in.png') 764px;
+    border: none;
+    width: 382px;
+    height: 92px;
+    padding: 0px;
+}
+
+/* Hovering */
+.microsoft-login-button:hover {
+    background: url('./microsoft-sign-in.png') 1146px;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Pressed */
+.microsoft-login-button:active {
+    background: url('./microsoft-sign-in.png') 382px;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Pressed but dragged cursor away */
+.microsoft-login-button:focus {
+    outline: none;
+}

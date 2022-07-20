@@ -1,0 +1,7 @@
+# oath settings for Microsoft login
+app_id: "d867b0fa-f1e1-49ec-9002-ab18e4fb3d76"
+app_secret: "42156a34-3f13-4e29-b15b-1f5669e8e673"
+redirect: "http://localhost:8000/callback"
+scopes:
+  - user.read
+authority: "https://login.microsoftonline.com/common"

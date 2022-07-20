@@ -25,3 +25,6 @@ db/*.csv
 .coverage
 # ESLint cache
 .eslintcache
+oauth_settings.yml
+oauth_settings.yml
+oauth_settings.yml

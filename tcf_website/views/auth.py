@@ -8,6 +8,8 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib import messages
 from django import forms
 from .browse import browse
+from dateutil import tz, parser
+from tcf_website.auth_helper import get_sign_in_flow, get_token_from_code, remove_user_and_token
 
 
 def login(request):
@@ -19,6 +21,23 @@ def login(request):
     # Note: For some reason the data won't load if you use render like below:
     # return render(request, 'browse/browse.html')
 
+def microsoft_login(request):
+  # Get the sign-in flow
+  flow = get_sign_in_flow()
+  # Save the expected flow so we can use it in the callback
+  try:
+    request.session['auth_flow'] = flow
+  except Exception as e:
+    print(e)
+  # Redirect to the Azure sign-in page
+  return redirect(flow['auth_uri'])
+
+def callback(request):
+  # Make the token request
+  result = get_token_from_code(request)
+  # Temporary! Save the response in an error so it's displayed
+  request.session['flash_error'] = { 'message': 'Token retrieved', 'debug': format(result) }
+  return redirect('profile')
 
 def login_error(request):
     """Login error view."""
@@ -67,5 +86,7 @@ def unauthenticated_index(request):
 def logout(request):
     """Logs out user."""
     auth_logout(request)
+    if request.session['auth_flow']:
+        remove_user_and_token(request)
     messages.add_message(request, messages.SUCCESS, "Logged out successfully!")
     return redirect('browse')
