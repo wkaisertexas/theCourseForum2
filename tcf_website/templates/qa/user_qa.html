@@ -1,0 +1,25 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}My Q&A - theCourseForum{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{% static 'reviews/review_stats.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="my-reviews container mx-auto">
+    <div class="my-reviews-header d-flex flex-sm-row flex-column mb-4">
+        <h1 class="h2 mt-2 mb-0">My Questions</h1>
+    </div>
+    {% include "qa/qa_stats.html" with stat='Questions' total_qa_written=total_questions_written total_qa_upvotes=total_question_upvotes %}
+    {% include "qa/questions.html" with questions=q_questions answers=q_answers %}
+</div>
+<!--<div class="my-reviews container mx-auto">
+    <div class="my-reviews-header d-flex flex-sm-row flex-column mb-4">
+        <h1 class="h2 mt-2 mb-0">My Answers</h1>
+    </div>
+    {% include "qa/qa_stats.html" with stat='Answers' total_qa_written=total_answers_written total_qa_upvotes=total_answer_upvotes %}
+    {% include "qa/qa.html" with questions=a_questions answers=a_answers %}
+</div>-->
+{% endblock %}

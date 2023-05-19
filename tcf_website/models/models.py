@@ -844,15 +844,23 @@ class Question(models.Model):
     @staticmethod
     def display_activity(course_id, instructor_id, user):
         """Prepare review list for course-instructor page."""
-        question = Question.objects.filter(
-            instructor=instructor_id,
-            course=course_id
-        ).exclude(text="").annotate(
-            sum_q_votes=models.functions.Coalesce(
-                models.Sum('votequestion__value'),
-                models.Value(0)
-            ),
-        )
+        if course_id != None and instructor_id != None:
+            question = Question.objects.filter(
+                instructor=instructor_id,
+                course=course_id
+            ).exclude(text="").annotate(
+                sum_q_votes=models.functions.Coalesce(
+                    models.Sum('votequestion__value'),
+                    models.Value(0)
+                ),
+            )
+        else:
+            question = Question.objects.exclude(text="").annotate(
+                sum_q_votes=models.functions.Coalesce(
+                    models.Sum('votequestion__value'),
+                    models.Value(0)
+                ),
+            )
         if user.is_authenticated:
             question = question.annotate(
                 user_q_vote=models.functions.Coalesce(

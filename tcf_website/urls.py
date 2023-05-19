@@ -47,6 +47,7 @@ urlpatterns = [
     path('answers/<int:answer_id>/downvote/', views.downvote_answer),
     path('answers/<int:pk>/delete/', views.DeleteAnswer.as_view(), name='delete_answer'),
     path('answers/<int:answer_id>/edit/', views.edit_answer, name='edit_answer'),
+    path('qa/', views.qa.profile_qa, name='qa'),
 
     # API URLs
     path('api/', include('tcf_website.api.urls'), name='api'),

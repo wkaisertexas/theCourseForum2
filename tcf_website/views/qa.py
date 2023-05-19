@@ -11,8 +11,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin  # For class-based vie
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, get_object_or_404
+from django.db.models import Avg, Count, Q
+from .browse import safe_round
+from django.shortcuts import render
 
-from ..models import Question, Answer
+from ..models import Question, Answer, User
 
 
 class QuestionForm(forms.ModelForm):
@@ -239,3 +242,43 @@ def downvote_answer(request, answer_id):
         answer.downvote(request.user)
         return JsonResponse({'ok': True})
     return JsonResponse({'ok': False})
+
+@login_required
+def profile_qa(request):
+    # Handled separately because it requires joining 1 more table (i.e. Vote)
+    q_upvote_stat = Question.objects.filter(user=request.user).aggregate(
+        total_question_upvotes=Count('votequestion', filter=Q(votequestion__value=1)),
+    )
+    a_upvote_stat = Answer.objects.filter(user=request.user).aggregate(
+        total_answer_upvotes=Count('voteanswer', filter=Q(voteanswer__value=1)),
+    )
+    # Get other statistics
+    other_stats = User.objects.filter(id=request.user.id).aggregate(
+        total_questions_written=Count('question'),
+        total_answers_written=Count('answer'),
+    )
+    # Get questions of user and their answers
+    q_questions = Question.objects.filter(user=request.user)
+    q_questions = Question.display_activity(None, None, request.user)
+    q_answers = {}
+    for question in q_questions:
+        q_answers[question.id] = Answer.display_activity(question.id, request.user)
+    # Get answers of user and their questions
+    a_all_answers = Answer.objects.filter(user=request.user)
+    a_questions = []
+    for answer in a_all_answers:
+        if answer.question not in a_questions:
+            a_questions.add(answer.question)
+    a_answers = {}
+    for question in a_questions:
+        a_answers[question.id] = Answer.display_activity(question.id, request.user)
+    a_questions = Question.display_activity(None, None, request.user)
+    # Merge the two dictionaries
+    merged = q_upvote_stat | a_upvote_stat | other_stats
+    # Round floats
+    stats = {key: safe_round(value) for key, value in merged.items()}
+    stats['q_questions'] = q_questions
+    stats['q_answers'] = q_answers
+    stats['a_questions'] = a_questions
+    stats['a_answers'] = a_answers
+    return render(request, 'qa/user_qa.html', context=stats)
