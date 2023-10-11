@@ -17,6 +17,10 @@
     }
 }
 
+.department-list {
+    padding: 1.25rem;
+}
+
 .school > .card-header {
     background-color: var(--secondary-color);
     color: white;
